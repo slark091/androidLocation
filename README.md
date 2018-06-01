@@ -1,2 +1,2 @@
 # androidLocation
-	record it so one day i can play it back
+	record it so that one day I can play it back
