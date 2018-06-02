@@ -1,5 +1,13 @@
 package com.example.test.menu;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -24,9 +32,20 @@ import java.util.Scanner;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +71,32 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this , testActivity.class);
+                startActivity(intent);
+            }
+        });
+//                Intent intent = new Intent(MainActivity.this , testActivity.class);
+//                startActivity(intent);
+//        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+//        imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                Intent intent = new Intent(MainActivity.this , testActivity.class);
+////                startActivity(intent);
+//
+//
+//
+//            }
+//        });
+
+
+
+
     }
 
     @Override
@@ -94,17 +139,24 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            load();
+            setTextView("nav_camera");
         } else if (id == R.id.nav_gallery) {
             Log.d("test , nav_gallery" , "click debug" );
-
+                Intent intent = new Intent(MainActivity.this , testActivity.class);
+                startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
+            Intent intent = new Intent(this , testServer.class);
+            startService(intent);
 
         } else if (id == R.id.nav_send) {
+
+            Intent intent = new Intent(this , testServer.class);
+            stopService(intent);
+
 
         }
 
@@ -123,41 +175,41 @@ public class MainActivity extends AppCompatActivity
 
         return true;
     }
-    public void load(){
-        final String path = "http://192.168.1.100/test/phpServer/public/index/index/test";
-        new Thread() {
-            public void run() {
-                try {
-                    URL url = new URL(path);
-                    HttpURLConnection conn = (HttpURLConnection) url
-                            .openConnection();
-                    conn.setRequestMethod("POST");
-                    conn.setReadTimeout(5000);
-                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                    String data = "postTestData";
-                    conn.setRequestProperty("Content-Length",String.valueOf(data.length()));
-                    conn.setDoOutput(true);
-                    conn.getOutputStream().write(data.getBytes());
-                    int code = conn.getResponseCode();
-                    if (code == 200) {
-                        InputStream is = conn.getInputStream();
-                        Scanner temp = new Scanner(is).useDelimiter("\\A");
-                        String result = temp.hasNext() ? temp.next() : "";
-                        Log.d("post sucess" , result);
-//                        String result = StreamTools.ReadStream(is);
-//                        Message msg = Message.obtain();
-//                        msg.what = SUCCESS;
-//                        msg.obj = result;
-//                        handler.sendMessage(msg);
-                    } else {
 
-                    }
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        }.start();
 
+
+
+    public boolean test(){
+
+        getApplicationContext().startService(new Intent(this , locationServer.class));
+
+
+
+
+
+
+        return true;
     }
+    public boolean startAlarm(){
+
+        Intent intent = new Intent("LOCATION_CLOCK");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this , 0  , intent , 0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        long second = 60*1000;
+        alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP , System.currentTimeMillis() , second , pendingIntent);
+
+
+        return  true;
+    }
+
+    public boolean setTextView( String string ){
+        TextView textView = (TextView) findViewById(R.id.mainText);
+        textView.setText(string);
+
+        return true;
+    }
+
+
+
 }

@@ -5,4 +5,17 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">设置</string>
+
+    <string name="test">test</string>
+
+    <string name="defaultNotLogin">please login in</string>
+    <!--<string name="defaultSign"></string>-->
+
+    <string name="buttonName">click</string>
+
+
+    <string name="userName">手机号码</string>
+    <string name="code">密码</string>
+    <string name="loginTheme">壁虎</string>
+    <string name="loginThemeTips">分享你现编的故事</string>
 </resources>
