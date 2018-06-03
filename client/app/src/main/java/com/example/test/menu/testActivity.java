@@ -6,10 +6,13 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -19,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -28,11 +32,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Scanner;
+
 /**
  * Created by test on 18-6-1.
  */
 
-public class testActivity extends Activity  {
+public class testActivity extends Activity implements View.OnClickListener {
 
     private  String tag = "testActivity";
     @Override
@@ -52,14 +68,17 @@ public class testActivity extends Activity  {
     //
     //
     //
+    private selfFunction sPost;
 
     private TextView mBtnLogin, mTips ;
 
     private EditText userNmaeInput , codeInput;
 
-    private ImageView loginTitleBack;
+    private ImageView loginTitleBack , loginTitleSignUp ;
 
     private View progress;
+
+    private RelativeLayout loginPage;
 
     private View mInputLayout;
 
@@ -69,7 +88,7 @@ public class testActivity extends Activity  {
     private CheckBox eyeSelector;
 
     public static final String regexMobile = "^((17[0-9])|(14[0-9])|(13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";
-    public static final String REGEX_PASSWORD = "^[a-zA-Z0-9]{6,20}$";
+    public static final String REGEX_PASSWORD = "\"^(?=.*?[a-z])(?=.*?[0-9])[a-zA-Z0-9_]{6,20}$\"";
 
     private void initView() {
         mBtnLogin = (TextView) findViewById(R.id.main_btn_login);
@@ -82,27 +101,15 @@ public class testActivity extends Activity  {
         codeInput = (EditText) findViewById(R.id.codeInput);
         eyeSelector = (CheckBox) findViewById(R.id.eye_selector);
         loginTitleBack = (ImageView) findViewById(R.id.login_title_back);
-        mBtnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 计算出控件的高与宽
-                Log.d(tag , "onClick");
-                mWidth = mBtnLogin.getMeasuredWidth();
-                mHeight = mBtnLogin.getMeasuredHeight();
-                // 隐藏输入框
-                mName.setVisibility(View.INVISIBLE);
-                mPsw.setVisibility(View.INVISIBLE);
-                mTips.setVisibility(View.INVISIBLE);
+        loginTitleSignUp = (ImageView) findViewById(R.id.login_title_sign_up);
+        loginPage = (RelativeLayout) findViewById(R.id.login_page);
 
-                inputAnimator(mInputLayout, mWidth, mHeight);
-            }
-        });
-        loginTitleBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
+        loginTitleSignUp.setOnClickListener(this);
+        mBtnLogin.setOnClickListener(this);
+        loginTitleBack.setOnClickListener(this);
+        loginPage.setOnClickListener(this);
+
         eyeSelector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -115,6 +122,7 @@ public class testActivity extends Activity  {
                 }
             }
         });
+
         final String[] recordUserNameInput = new String[1];
         recordUserNameInput[0] = "";
         userNmaeInput.addTextChangedListener(new TextWatcher() {
@@ -146,13 +154,38 @@ public class testActivity extends Activity  {
                         mTips.setVisibility(View.INVISIBLE);
                     }
 
-
-
-
                 }
+
 
             }
         });
+
+        codeInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String code = String.valueOf(s);
+                if(code.matches("^(?=.*?[a-z])(?=.*?[0-9])[a-zA-Z0-9_]{6,16}$")){
+                    if(recordUserNameInput[0].matches(regexMobile)){
+                        mBtnLogin.setVisibility(View.VISIBLE);
+                    }else{
+                        mBtnLogin.setVisibility(View.INVISIBLE);
+                    }
+                }else {
+                    mBtnLogin.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
 
 
 
@@ -228,7 +261,155 @@ public class testActivity extends Activity  {
 
     }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id){
+            default:{
+                InputMethodManager inputMethodManager =
+                        (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)  ;
+                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken() , 0);
+//                inputMethodManager.toggleSoftInput(0 , InputMethodManager.HIDE_NOT_ALWAYS);
 
+                break;
+            }
+            case R.id.main_btn_login:{
+                // 计算出控件的高与宽
+
+
+
+                mWidth = mBtnLogin.getMeasuredWidth();
+                mHeight = mBtnLogin.getMeasuredHeight();
+                // 隐藏输入框
+                mName.setVisibility(View.INVISIBLE);
+                mPsw.setVisibility(View.INVISIBLE);
+                mTips.setVisibility(View.INVISIBLE);
+                mBtnLogin.setVisibility(View.INVISIBLE);
+
+                inputAnimator(mInputLayout, mWidth, mHeight);
+
+                recovery();
+
+
+                String tempValue = String.valueOf(codeInput.getText()) ;
+                String tempName = String.valueOf(userNmaeInput.getText()) ;
+                postStruct tempData ;
+
+                List<postStruct> listData = new ArrayList<postStruct>();
+
+                tempData = new postStruct();
+                tempData.value = tempName;
+                tempData.name = "phone";
+                listData.add(tempData);
+                tempData = new postStruct();
+                tempData.value = md5(tempValue);
+                tempData.name = "code";
+                listData.add(tempData);
+
+
+                Log.d(tag , String.valueOf(listData) );
+
+//                handleInfo(listData);
+                post(handleInfo(listData));
+
+
+                break;
+            }
+            case R.id.login_title_back:{
+                finish();
+                break;
+            }
+
+        }
+
+
+    }
+    public static String md5(String string) {
+        string += "test";
+
+        MessageDigest md5 = null;
+        try {
+            md5 = MessageDigest.getInstance("MD5");
+            byte[] bytes = md5.digest(string.getBytes());
+            String result = "";
+            for (byte b : bytes) {
+                String temp = Integer.toHexString(b & 0xff);
+                if (temp.length() == 1) {
+                    temp = "0" + temp;
+                }
+                result += temp;
+            }
+            return result;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "error";
+    }
+
+    public String post(final String  info){
+        final String path = "http://192.168.1.100/test/phpServer/public/index/index/test";
+        new Thread() {
+            public void run() {
+//                while (true)
+                {
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        URL url = new URL(path);
+                        HttpURLConnection conn = (HttpURLConnection) url
+                                .openConnection();
+                        conn.setRequestMethod("POST");
+                        conn.setReadTimeout(5000);
+                        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                        conn.setRequestProperty("Content-Length",String.valueOf(info.length()));
+                        conn.setDoOutput(true);
+                        conn.getOutputStream().write(info.getBytes());
+
+                        int code = conn.getResponseCode();
+                        if (code == 200) {
+                            InputStream is = conn.getInputStream();
+                            Scanner temp = new Scanner(is).useDelimiter("\\A");
+                            String result = temp.hasNext() ? temp.next() : "";
+                            Log.d("post sucess" , result);
+                            recovery();
+//                        String result = StreamTools.ReadStream(is);
+//                        Message msg = Message.obtain();
+//                        msg.what = SUCCESS;
+//                        msg.obj = result;
+//                        handler.sendMessage(msg);
+                        } else {
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }.start();
+        return "test";
+    }
+
+    public String handleInfo( List<postStruct> infoArray){
+        String info = "";
+
+        for(int i = 0 ; i < infoArray.size() ; i++){
+            if(info.equals("")){
+                info +=  infoArray.get(i).name + "=" + infoArray.get(i).value;
+            }else{
+                info += "&" + infoArray.get(i).name + "=" + infoArray.get(i).value;
+
+            }
+
+        }
+        return info;
+
+
+    }
 
     public class JellyInterpolator extends LinearInterpolator {
         private float factor;
@@ -260,6 +441,8 @@ public class testActivity extends Activity  {
         animator2.setDuration(500);
         animator2.setInterpolator(new AccelerateDecelerateInterpolator());
         animator2.start();
+
+//        finish();
     }
 
     //edited by slark091

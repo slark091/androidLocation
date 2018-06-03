@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#7adfb8"
+    android:id="@+id/login_page"
     tools:context=".MainActivity" >
 
     <include
@@ -43,6 +44,7 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:layout_marginTop="50dip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" >
@@ -71,6 +73,7 @@
             />
 
         <Button
+
             android:id="@+id/main_btn_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,7 +88,9 @@
             android:paddingTop="21dip"
             android:text="Login"
             android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:visibility="gone"
+            />
     </RelativeLayout>
 
 </RelativeLayout>

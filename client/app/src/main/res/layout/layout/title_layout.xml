@@ -11,13 +11,14 @@
         android:layout_height="wrap_content"
         android:src="@drawable/back" />
 
-    <TextView
+
+    <ImageView
+        android:id="@+id/login_title_sign_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#ffffff"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:textSize="20sp"
-        android:text="Sign up"
-        />
+
+        android:src="@drawable/sign_up" />
+
 </RelativeLayout>

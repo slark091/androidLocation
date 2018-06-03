@@ -1,11 +1,17 @@
 package com.example.test.menu;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -18,24 +24,51 @@ import java.util.Scanner;
 
 
 
-
+class postStruct{
+    public String name;
+    public  String value;
+}
 
 
 
 public class selfFunction {
 
-    public void load(){
+    public static String md5(String string) {
+        string += "test";
+
+        MessageDigest md5 = null;
+        try {
+            md5 = MessageDigest.getInstance("MD5");
+            byte[] bytes = md5.digest(string.getBytes());
+            String result = "";
+            for (byte b : bytes) {
+                String temp = Integer.toHexString(b & 0xff);
+                if (temp.length() == 1) {
+                    temp = "0" + temp;
+                }
+                result += temp;
+            }
+            return result;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "error";
+    }
+
+    public String post(final String  info){
         final String path = "http://192.168.1.100/test/phpServer/public/index/index/test";
         new Thread() {
             public void run() {
-                while (true){
+//                while (true)
+                {
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     try {
-                        URL url = new URL(path);
+                        String pathIn = path + info;
+                        URL url = new URL(pathIn);
                         HttpURLConnection conn = (HttpURLConnection) url
                                 .openConnection();
                         conn.setRequestMethod("POST");
@@ -66,9 +99,25 @@ public class selfFunction {
 
             }
         }.start();
-
+        return "test";
     }
 
+    public String handleInfo( List<postStruct> infoArray){
+        String info = "";
+
+        for(int i = 0 ; i < infoArray.size() ; i++){
+            if(info.equals("")){
+                info += "?" + infoArray.get(i).name + "=" + infoArray.get(i).value;
+            }else{
+                info += "&" + infoArray.get(i).name + "=" + infoArray.get(i).value;
+
+            }
+
+        }
+        return info;
+
+
+    }
 
     public void testLog() throws InterruptedException {
         while (true){
