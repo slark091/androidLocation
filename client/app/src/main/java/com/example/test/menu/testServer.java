@@ -19,7 +19,6 @@ public class testServer extends Service {
     @Override
     public void onCreate(){
         super.onCreate();
-        Log.d(tag , "onCreate");
     }
 
     @Override

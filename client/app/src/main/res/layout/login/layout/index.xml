@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#7adfb8"
     android:id="@+id/login_page"
-    tools:context=".MainActivity" >
+    tools:context=".testActivity" >
 
     <include
         android:id="@+id/main_title"
@@ -72,7 +72,7 @@
             android:visibility="gone"
             />
 
-        <Button
+        <ImageButton
 
             android:id="@+id/main_btn_login"
             android:layout_width="wrap_content"
@@ -80,17 +80,23 @@
             android:layout_below="@+id/input_layout"
             android:layout_centerInParent="true"
             android:layout_marginTop="15dip"
-            android:background="@drawable/text_bg"
             android:gravity="center"
-            android:paddingBottom="21dip"
-            android:paddingLeft="15dip"
-            android:paddingRight="15dip"
-            android:paddingTop="21dip"
-            android:text="Login"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
+            android:background="#00000000"
+            android:src="@drawable/login"
             android:visibility="gone"
             />
+
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dip"
+        android:text="@string/fogotPassword"
+        android:textColor="#00f"
+
+        />
+
 
 </RelativeLayout>

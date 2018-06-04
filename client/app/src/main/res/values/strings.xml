@@ -18,4 +18,5 @@
     <string name="code">密码</string>
     <string name="loginTheme">壁虎</string>
     <string name="loginThemeTips">分享你现编的故事</string>
+    <string name="fogotPassword" >忘记密码</string>
 </resources>

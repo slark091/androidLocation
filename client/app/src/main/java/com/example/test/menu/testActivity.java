@@ -26,6 +26,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -55,7 +56,6 @@ public class testActivity extends Activity implements View.OnClickListener {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.index);
-        Log.d(tag , "onCreate");
         initView();
 
     }
@@ -70,7 +70,9 @@ public class testActivity extends Activity implements View.OnClickListener {
     //
     private selfFunction sPost;
 
-    private TextView mBtnLogin, mTips ;
+    private TextView  mTips ;
+
+    private ImageButton mBtnLogin;
 
     private EditText userNmaeInput , codeInput;
 
@@ -91,7 +93,9 @@ public class testActivity extends Activity implements View.OnClickListener {
     public static final String REGEX_PASSWORD = "\"^(?=.*?[a-z])(?=.*?[0-9])[a-zA-Z0-9_]{6,20}$\"";
 
     private void initView() {
-        mBtnLogin = (TextView) findViewById(R.id.main_btn_login);
+
+
+        mBtnLogin = (ImageButton) findViewById(R.id.main_btn_login);
         progress = findViewById(R.id.layout_progress);
         mInputLayout = findViewById(R.id.input_layout);
         mName = (LinearLayout) findViewById(R.id.input_layout_name);
@@ -151,6 +155,7 @@ public class testActivity extends Activity implements View.OnClickListener {
                         mTips.setText("请正确填写电话号码");
                         mTips.setVisibility(View.VISIBLE);
                     }else{
+                        mTips.setText("");
                         mTips.setVisibility(View.INVISIBLE);
                     }
 
@@ -288,7 +293,6 @@ public class testActivity extends Activity implements View.OnClickListener {
 
                 inputAnimator(mInputLayout, mWidth, mHeight);
 
-                recovery();
 
 
                 String tempValue = String.valueOf(codeInput.getText()) ;
@@ -307,8 +311,6 @@ public class testActivity extends Activity implements View.OnClickListener {
                 listData.add(tempData);
 
 
-                Log.d(tag , String.valueOf(listData) );
-
 //                handleInfo(listData);
                 post(handleInfo(listData));
 
@@ -317,6 +319,12 @@ public class testActivity extends Activity implements View.OnClickListener {
             }
             case R.id.login_title_back:{
                 finish();
+                break;
+            }
+            case R.id.login_title_sign_up:{
+                Intent intent = new Intent( testActivity.this , signUpActivity.class);
+//                recovery();
+                startActivity(intent);
                 break;
             }
 
@@ -374,14 +382,32 @@ public class testActivity extends Activity implements View.OnClickListener {
                             InputStream is = conn.getInputStream();
                             Scanner temp = new Scanner(is).useDelimiter("\\A");
                             String result = temp.hasNext() ? temp.next() : "";
-                            Log.d("post sucess" , result);
-                            recovery();
+                            Log.d("testActivity" , result);
+                            switch (result){
+                                case "noAccount":{
+
+                                    break;
+                                }
+                                case "rightCode":{
+
+                                    break;
+                                }
+                                case "wrongCode":{
+
+                                    break;
+                                }
+
+
+                            }
+
+
 //                        String result = StreamTools.ReadStream(is);
 //                        Message msg = Message.obtain();
 //                        msg.what = SUCCESS;
 //                        msg.obj = result;
 //                        handler.sendMessage(msg);
                         } else {
+
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
@@ -430,6 +456,7 @@ public class testActivity extends Activity implements View.OnClickListener {
         mInputLayout.setVisibility(View.VISIBLE);
         mName.setVisibility(View.VISIBLE);
         mPsw.setVisibility(View.VISIBLE);
+        mTips.setVisibility(View.VISIBLE);
 
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mInputLayout.getLayoutParams();
         params.leftMargin = 0;

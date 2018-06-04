@@ -149,13 +149,13 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
-            Intent intent = new Intent(this , testServer.class);
-            startService(intent);
+//            Intent intent = new Intent(this , testServer.class);
+//            startService(intent);
 
         } else if (id == R.id.nav_send) {
 
-            Intent intent = new Intent(this , testServer.class);
-            stopService(intent);
+            Intent intent = new Intent(MainActivity.this , signUpActivity.class);
+            startActivity(intent);
 
 
         }else if(id == R.id.drawer_layout){
