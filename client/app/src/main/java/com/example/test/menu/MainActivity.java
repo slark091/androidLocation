@@ -96,9 +96,7 @@ public class MainActivity extends AppCompatActivity
                 }catch (Throwable e){
                     infoPush((e));
                 }
-
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
+                
             }
         });
 
@@ -272,7 +270,6 @@ public class MainActivity extends AppCompatActivity
     public boolean infoPush(Object msg){
         String temp = (msg == null) ? "null" : msg.toString();
         new  AlertDialog.Builder(this)
-
                 .setMessage(temp)
                 .show();
 
