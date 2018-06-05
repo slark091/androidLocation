@@ -1,16 +1,24 @@
 package com.example.test.menu;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -22,11 +30,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import java.net.HttpURLConnection;
+import java.net.NetworkInterface;
 import java.net.URL;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 import android.os.Handler;
@@ -39,13 +51,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    final public String tag = "MainActivity";
 
-
-
+    private ImageView clickToLogin;
+    private AMapLocationClient aMapLocationClient;
+    private AMapLocationClientOption aMapLocationClientOption;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +78,11 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                infoPush(getAdressMacByInterface());
+
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
             }
         });
 
@@ -68,18 +91,10 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this , testActivity.class);
-                startActivity(intent);
-            }
-        });
 //                Intent intent = new Intent(MainActivity.this , testActivity.class);
 //                startActivity(intent);
 //        ImageView imageView = (ImageView) findViewById(R.id.imageView);
@@ -94,8 +109,44 @@ public class MainActivity extends AppCompatActivity
 //            }
 //        });
 
+        try {
+
+        }catch (Throwable e){
+            e.printStackTrace();
+            infoPush(String.valueOf(e));
+        }
 
 
+        clickToLogin = (ImageView) findViewById(R.id.imageView);
+//        clickToLogin.setOnClickListener(new View.OnClickListener(){
+//
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MainActivity.this , testActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+        aMapLocationClient = new AMapLocationClient(this.getApplicationContext());
+        aMapLocationClientOption = setDefaultOption();
+        aMapLocationClient.setLocationOption(aMapLocationClientOption);
+
+        aMapLocationClient.setLocationListener(new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation aMapLocation) {
+                if(aMapLocation != null){
+                    if(aMapLocation.getErrorCode() == 0){
+                        infoPush(String.valueOf(aMapLocation.getLatitude()));
+
+                    }else{
+                        infoPush(aMapLocation.getErrorInfo());
+                    }
+
+
+                }
+            }
+        });
+
+        aMapLocationClient.startLocation();
 
     }
 
@@ -116,6 +167,34 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    private static String getAdressMacByInterface() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (nif.getName().equalsIgnoreCase("wlan0")) {
+                    byte[] macBytes = nif.getHardwareAddress();
+                    if (macBytes == null) {
+                        return "";
+                    }
+
+                    StringBuilder res1 = new StringBuilder();
+                    for (byte b : macBytes) {
+                        res1.append(String.format("%02X:", b));
+                    }
+
+                    if (res1.length() > 0) {
+                        res1.deleteCharAt(res1.length() - 1);
+                    }
+                    return res1.toString();
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e("MobileAcces", "Erreur lecture propriete Adresse MAC ");
+        }
+        return null;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -125,7 +204,11 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             return true;
+        } else if (id == R.id.fab) {
+            infoPush("sign up");
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -138,24 +221,26 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
-            setTextView("nav_camera");
+            infoPush("test");
         } else if (id == R.id.nav_gallery) {
-            Log.d("test , nav_gallery" , "click debug" );
-                Intent intent = new Intent(MainActivity.this , testActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(this, testActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
+//            locationClient.setLocationOption();
+
+
+//            AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
+//            infoPush(String.valueOf(aMapLocation.getLatitude()));
+//            infoPush(String.valueOf(aMapLocation == null) );
+
+
 
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
-//            Intent intent = new Intent(this , testServer.class);
-//            startService(intent);
+
 
         } else if (id == R.id.nav_send) {
-
-            Intent intent = new Intent(MainActivity.this , signUpActivity.class);
-            startActivity(intent);
 
 
         }else if(id == R.id.drawer_layout){
@@ -168,9 +253,8 @@ public class MainActivity extends AppCompatActivity
     }
     public boolean infoPush(String msg){
         new  AlertDialog.Builder(this)
-                .setTitle(msg)
-                .setIcon(android.R.drawable.ic_dialog_info)
 
+                .setMessage(msg)
                 .show();
 
 
@@ -211,6 +295,29 @@ public class MainActivity extends AppCompatActivity
 
         return true;
     }
+    private AMapLocationClientOption setDefaultOption(){
+        AMapLocationClientOption option = new AMapLocationClientOption();
+        option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        option.setGpsFirst(false);
+        option.setHttpTimeOut(33333);
+        int interval = 2*1000;
+        option.setInterval(interval);
+        option.setNeedAddress(true);
+        option.setOnceLocation(false);
+        option.setOnceLocationLatest(false);
+        AMapLocationClientOption.setLocationProtocol(
+                AMapLocationClientOption.AMapLocationProtocol.HTTP);
+        option.setSensorEnable(false);
+        option.setWifiScan(true);
+        option.setLocationCacheEnable(true);
+        return option;
+
+
+
+    }
+
+
+
 
 
 
