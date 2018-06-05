@@ -95,7 +95,7 @@
         android:layout_marginBottom="30dip"
         android:text="@string/fogotPassword"
         android:textColor="#00f"
-
+        android:visibility="gone"
         />
 
 

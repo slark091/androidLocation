@@ -294,25 +294,12 @@ public class testActivity extends Activity implements View.OnClickListener {
                 inputAnimator(mInputLayout, mWidth, mHeight);
 
 
-
-                String tempValue = String.valueOf(codeInput.getText()) ;
-                String tempName = String.valueOf(userNmaeInput.getText()) ;
-                postStruct tempData ;
-
-                List<postStruct> listData = new ArrayList<postStruct>();
-
-                tempData = new postStruct();
-                tempData.value = tempName;
-                tempData.name = "phone";
-                listData.add(tempData);
-                tempData = new postStruct();
-                tempData.value = md5(tempValue);
-                tempData.name = "code";
-                listData.add(tempData);
-
+                postStructList listData = new postStructList();
+                listData.add("phone" , userNmaeInput.getText());
+                listData.add("code" , codeInput.getText());
 
 //                handleInfo(listData);
-                post(handleInfo(listData));
+                post( "index/test" , (listData));
 
 
                 break;
@@ -354,8 +341,16 @@ public class testActivity extends Activity implements View.OnClickListener {
         return "error";
     }
 
-    public String post(final String  info){
-        final String path = "http://192.168.1.100/test/phpServer/public/index/index/test";
+    public String post( String method  ,  postStructList list){
+
+        final  String info = handleInfo(list);
+        String serverAddress = "192.168.1.100";
+
+        final String path = "http://" +
+                serverAddress +
+                "/test/phpServer/public/index/" +
+                method +
+                "";
         new Thread() {
             public void run() {
 //                while (true)
@@ -420,7 +415,8 @@ public class testActivity extends Activity implements View.OnClickListener {
         return "test";
     }
 
-    public String handleInfo( List<postStruct> infoArray){
+    public String handleInfo(postStructList list){
+        List<postStruct> infoArray = list.getDataList();
         String info = "";
 
         for(int i = 0 ; i < infoArray.size() ; i++){

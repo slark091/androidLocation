@@ -24,6 +24,28 @@ import java.util.Scanner;
 
 
 
+class postStructList{
+    private List<postStruct> dataList = new ArrayList<>() ;
+    private postStruct postItem;
+    postStructList(){
+
+
+
+    }
+    public void add(String name , Object value ){
+
+        postItem = new postStruct();
+        postItem.name = name;
+        postItem.value = String.valueOf(value);
+        dataList.add(postItem);
+    }
+    public List<postStruct> getDataList(){
+        return  dataList;
+    }
+
+
+}
+
 class postStruct{
     public String name;
     public  String value;

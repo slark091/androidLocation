@@ -37,6 +37,7 @@ import java.net.URL;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
@@ -79,7 +80,22 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-                infoPush(getAdressMacByInterface());
+//                infoPush(getAdressMacByInterface());
+                try {
+                    AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
+
+                    testActivity temp = new testActivity();
+
+                    postStructList listData = new postStructList();
+                    listData.add("latitude" , aMapLocation.getLatitude());
+                    listData.add("longitude" , aMapLocation.getLongitude());
+
+
+                    infoPush(aMapLocation);
+                    temp.post("index/sign" , listData );
+                }catch (Throwable e){
+                    infoPush((e));
+                }
 
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
@@ -110,14 +126,7 @@ public class MainActivity extends AppCompatActivity
 //        });
 
         try {
-
-        }catch (Throwable e){
-            e.printStackTrace();
-            infoPush(String.valueOf(e));
-        }
-
-
-        clickToLogin = (ImageView) findViewById(R.id.imageView);
+            clickToLogin = (ImageView) findViewById(R.id.imageView);
 //        clickToLogin.setOnClickListener(new View.OnClickListener(){
 //
 //            @Override
@@ -126,27 +135,36 @@ public class MainActivity extends AppCompatActivity
 //                startActivity(intent);
 //            }
 //        });
-        aMapLocationClient = new AMapLocationClient(this.getApplicationContext());
-        aMapLocationClientOption = setDefaultOption();
-        aMapLocationClient.setLocationOption(aMapLocationClientOption);
+            aMapLocationClient = new AMapLocationClient(this.getApplicationContext());
+            aMapLocationClientOption = setDefaultOption();
+            aMapLocationClient.setLocationOption(aMapLocationClientOption);
 
-        aMapLocationClient.setLocationListener(new AMapLocationListener() {
-            @Override
-            public void onLocationChanged(AMapLocation aMapLocation) {
-                if(aMapLocation != null){
-                    if(aMapLocation.getErrorCode() == 0){
-                        infoPush(String.valueOf(aMapLocation.getLatitude()));
+            aMapLocationClient.setLocationListener(new AMapLocationListener() {
+                @Override
+                public void onLocationChanged(AMapLocation aMapLocation) {
+                    if(aMapLocation != null){
+                        if(aMapLocation.getErrorCode() == 0){
+                            infoPush((aMapLocation.getAltitude()));
 
-                    }else{
-                        infoPush(aMapLocation.getErrorInfo());
+
+                        }else{
+                            infoPush(aMapLocation.getErrorInfo());
+                        }
+
+
                     }
-
-
+                    aMapLocationClient.stopLocation();
                 }
-            }
-        });
+            });
 
-        aMapLocationClient.startLocation();
+            aMapLocationClient.startLocation();
+        }catch (Throwable e){
+//            e.printStackTrace();
+            infoPush((e));
+        }
+
+
+
 
     }
 
@@ -251,10 +269,11 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public boolean infoPush(String msg){
+    public boolean infoPush(Object msg){
+        String temp = (msg == null) ? "null" : msg.toString();
         new  AlertDialog.Builder(this)
 
-                .setMessage(msg)
+                .setMessage(temp)
                 .show();
 
 
