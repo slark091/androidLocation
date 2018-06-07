@@ -1,0 +1,25 @@
+---------------------------------------------------------------
+[ 2018-06-07T16:42:59+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/test
+[ sql ] [ DB ] CONNECT:[ UseTime:0.002135s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_test` [ RunTime:0.047892s ]
+[ sql ] [ SQL ] INSERT INTO `location_test` (`time` , `latitude` , `longitude`) VALUES ('test' , 'test' , 'test') [ RunTime:0.034666s ]
+[ error ] [8]未定义数组索引: phone
+---------------------------------------------------------------
+[ 2018-06-07T16:43:04+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001457s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.021641s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000346s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:43:24+08:00 ] 0.0.0.0 POST /test/phpServer/public/index/index/edit_
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001349s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004065s ]
+[ sql ] [ SQL ] DELETE FROM `location_fence`    WHERE  `id` = 12 [ RunTime:0.043174s ]
+[ sql ] [ SQL ] DELETE FROM `location_fence`    WHERE  `id` = 13 [ RunTime:0.030271s ]
+[ sql ] [ SQL ] DELETE FROM `location_fence`    WHERE  `id` = 14 [ RunTime:0.041287s ]
+[ sql ] [ SQL ] DELETE FROM `location_fence`    WHERE  `id` = 15 [ RunTime:0.039009s ]
+[ sql ] [ SQL ] INSERT INTO `location_fence` (`fence_array` , `id`) VALUES ('[{\"O\":31.49675782170974,\"M\":104.34840287005619,\"lng\":104.348403,\"lat\":31.496758},{\"O\":31.50144155911599,\"M\":105.33167923724369,\"lng\":105.331679,\"lat\":31.501442},{\"O\":30.73018713807569,\"M\":104.94166458880619,\"lng\":104.941665,\"lat\":30.730187},{\"O\":31.17771431147148,\"M\":104.09571732318119,\"lng\":104.095717,\"lat\":31.177714},{\"O\":31.609102721962177,\"M\":103.89247025286869,\"lng\":103.89247,\"lat\":31.609103}]' , 0) [ RunTime:0.017728s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:43:25+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001381s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.009159s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000271s ]
