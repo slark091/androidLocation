@@ -66,34 +66,29 @@ class Index extends Controller
 
     public function edit_(){
 
-        $update = null;
-        $add = null;
-        $delete = null;
+
         $arr = $_POST["arr"];
         foreach ($arr as $item){
             if($item[0]["operation"] == "update" ){
-                $update[] = $item[0];
                 unset($item[0]["operation"]);
 
-                $login = \think\Db::name("fence")->update($item[0]);
+                \think\Db::name("fence")->update($item[0]);
                 continue;
 
             }
 
             if($item[0]["operation"] == "delete" ){
-                $delete[] = $item[0];
                 unset($item[0]["operation"]);
 
-                $login = \think\Db::name("fence")->delete($item[0]);
+                \think\Db::name("fence")->delete($item[0]);
                 continue;
 
             }
             if($item[0]["operation"] == "add" ){
 
-                $add[] = $item[0];
                 unset($item[0]["operation"]);
                 unset($item[0]["id"]);
-                $login = \think\Db::name("fence")->insert($item[0]);
+                \think\Db::name("fence")->insert($item[0]);
 
 
                 continue;
