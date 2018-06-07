@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:75:"C:\wamp\www\test\phpServer\public/../application/index\view\index\edit.html";i:1528291910;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:75:"C:\wamp\www\test\phpServer\public/../application/index\view\index\edit.html";i:1528363202;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +15,7 @@
 
 
 <div style="width: 100%">
-    <div id="radioDiv" style=" float: left ;; background: #4288ce ; height: auto ; width: 40%;"  >
+    <div id="radioDiv" style=" float: left ;; background: #4288ce ; height: auto ; width: 30%;"  >
 
         <?php if(is_array($fence) || $fence instanceof \think\Collection || $fence instanceof \think\Paginator): $i = 0; $__LIST__ = $fence;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$data): $mod = ($i % 2 );++$i;?>
         <div style="float:top;   " id="div<?php echo $data['id']; ?>" >
@@ -28,14 +28,26 @@
 
 
     </div>
-    <div style="float: right;width: 60%;min-width: 350px;overflow: hidden;position: relative">
-        <div style="width:100%;height: 500px;overflow: hidden;margin:0;"  id="container"></div>
+    <div style="float: right;width: 70%;min-width: 350px; height: 100% ;overflow: hidden;position: relative">
+        <div style="width:100%;height: 500px;overflow: hidden;margin:0;"  id="container">
+
+        </div>
+
         <div class="button-group" style="width: 100%">
             <input type="button" class="button btn" value="鼠标绘制面" id="polygon" style="width: 120px;margin-left:30px;position: relative;top: -60px"/>
         </div>
-        <div>
-            <button style="size: A3 ; width: auto  " id="submit" > 确认修改 </button>
-            <button style="size: A3 ; width: auto ; left: 10% " id="addRadio" > 增加radio </button>
+
+        <div style="float: left" >
+            <div>
+                <button style="size: A3 ; width: auto  " id="submit" > 确认修改 </button>
+                <button style="size: A3 ; width: auto ; left: 10% " id="addRadio" > 增加radio </button>
+
+            </div>
+
+        </div>
+
+        <div style="float: right" >
+            <div id="tip" style="color: #4288ce;" ></div>
 
         </div>
 
@@ -63,22 +75,62 @@
 <script>
     var recordPolygons = [];
     var map = new AMap.Map("container", {
-        resizeEnable: true
+
+        resizeEnable: true,
+
     });
-    //在地图中添加MouseTool插件
+
+
+    map.plugin('AMap.Geolocation', function() {
+        geolocation = new AMap.Geolocation({
+            enableHighAccuracy: true,//是否使用高精度定位，默认:true
+            timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+            buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+            zoomToAccuracy: true,      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+            buttonPosition:'RB'
+        });
+        map.addControl(geolocation);
+        geolocation.getCurrentPosition();
+        AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+        AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+    });
+    //解析定位结果
+    function onComplete(data) {
+        var str=['定位成功'];
+        str.push('经度：' + data.position.getLng());
+        str.push('纬度：' + data.position.getLat());
+        if(data.accuracy){
+            str.push('精度：' + data.accuracy + ' 米');
+        }//如为IP精确定位结果则没有精度信息
+        str.push('是否经过偏移：' + (data.isConverted ? '是' : '否'));
+        document.getElementById('tip').innerHTML = str.join('<br>');
+    }
+    //解析定位错误信息
+    function onError(data) {
+        document.getElementById('tip').innerHTML = '定位失败';
+    }
+
+
+
+   //在地图中添加MouseTool插件
     var mouseTool = new AMap.MouseTool(map);
     AMap.event.addDomListener(document.getElementById('polygon'), 'click', function(e) {
         map.clearMap();
+        let checked = $("input[name=fence]:checked")[0];
 
+        if(checked === undefined ) {
+            alert("please choose radio")
+            return;
+        }
         mouseTool.polygon();
     }, false);
     AMap.event.addListener( mouseTool,'draw',function(e){ //添加事件
 //        alert((e.obj.getPath()));//获取路径/范围
+        let checked = $("input[name=fence]:checked")[0];
 
         var path = e.obj.getPath();
         recordPolygons = JSON.stringify(path);
         console.log(recordPolygons);
-        let checked = $("input[name=fence]:checked")[0];
         if(checked.value !== JSON.stringify(path)  ){
             checked.value = JSON.stringify(path);
             if(checked.getAttribute("operation")==="origin"){
@@ -96,7 +148,10 @@
 
 
     setTimeout(function () {
-        $("input[name=fence]").get(0).click();
+        if($("input[name=fence]").get(0)!==undefined){
+            $("input[name=fence]").get(0).click();
+
+        }
 
     } , 30)
 

@@ -23,3 +23,193 @@
 [ sql ] [ DB ] CONNECT:[ UseTime:0.001381s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
 [ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.009159s ]
 [ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000271s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:48:17+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.010681s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004321s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000249s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:48:19+08:00 ] 0.0.0.0 POST /test/phpServer/public/index/index/edit_
+[ sql ] [ DB ] CONNECT:[ UseTime:0.002300s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003843s ]
+[ sql ] [ SQL ] DELETE FROM `location_fence`    WHERE  `id` = 16 [ RunTime:0.023530s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:48:20+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001233s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.005233s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000348s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:49:11+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001552s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.005571s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000331s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:49:59+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001262s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003739s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000221s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:50:19+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001457s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004644s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000312s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:50:39+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001566s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.005246s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000302s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:51:22+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001484s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003783s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000216s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:51:38+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001772s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.005776s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000316s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:51:50+08:00 ] 0.0.0.0 POST /test/phpServer/public/index/index/edit_
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001496s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003738s ]
+[ sql ] [ SQL ] INSERT INTO `location_fence` (`fence_array` , `id`) VALUES ('[{\"O\":31.730656888320205,\"M\":104.46925247943119,\"lng\":104.469252,\"lat\":31.730657},{\"O\":31.50144155911599,\"M\":105.48548783099369,\"lng\":105.485488,\"lat\":31.501442},{\"O\":30.862307659739024,\"M\":105.31519974505619,\"lng\":105.3152,\"lat\":30.862308},{\"O\":30.862307659739024,\"M\":104.11219681536869,\"lng\":104.112197,\"lat\":30.862308},{\"O\":31.257576553919804,\"M\":103.72767533099369,\"lng\":103.727675,\"lat\":31.257577}]' , 0) [ RunTime:0.022190s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:51:51+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001157s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004101s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000253s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:53:07+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.011847s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.005917s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000361s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:53:09+08:00 ] 0.0.0.0 POST /test/phpServer/public/index/index/edit_
+[ sql ] [ DB ] CONNECT:[ UseTime:0.002031s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003796s ]
+[ sql ] [ SQL ] DELETE FROM `location_fence`    WHERE  `id` = 17 [ RunTime:0.019212s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:53:10+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001198s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.005514s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000372s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:53:11+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001330s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.006060s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000309s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:53:23+08:00 ] 0.0.0.0 POST /test/phpServer/public/index/index/edit_
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001208s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004740s ]
+[ sql ] [ SQL ] INSERT INTO `location_fence` (`fence_array` , `id`) VALUES ('[{\"O\":31.412410448893862,\"M\":104.39784134661869,\"lng\":104.397841,\"lat\":31.41241},{\"O\":31.5201741622403,\"M\":105.95789994036869,\"lng\":105.9579,\"lat\":31.520174},{\"O\":30.975409129454295,\"M\":105.87550247943119,\"lng\":105.875502,\"lat\":30.975409},{\"O\":30.90944952175737,\"M\":104.87574662005619,\"lng\":104.875747,\"lat\":30.90945},{\"O\":31.17771431147148,\"M\":103.75514115130619,\"lng\":103.755141,\"lat\":31.177714}]' , 0) [ RunTime:0.023476s ]
+---------------------------------------------------------------
+[ 2018-06-07T16:53:24+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.002578s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004277s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000258s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:10:56+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.017000s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.006996s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000288s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:11:36+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.011554s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003969s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000312s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:11:58+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001214s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.006026s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000551s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:12:26+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001200s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004007s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000367s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:12:30+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001794s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003998s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000238s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:12:55+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.012107s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003742s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000243s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:13:20+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001513s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003848s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000233s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:14:04+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.004743s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004136s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000242s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:14:24+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001401s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.005108s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000382s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:15:08+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001273s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.006056s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000251s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:15:31+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.013961s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003900s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000235s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:15:47+08:00 ] 0.0.0.0 POST /test/phpServer/public/index/index/edit_
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001275s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003872s ]
+[ sql ] [ SQL ] UPDATE `location_fence`  SET `fence_array`='[{\"O\":31.535939436406192,\"M\":104.69861158513152,\"lng\":104.698612,\"lat\":31.535939},{\"O\":31.535802271528876,\"M\":104.69971665524565,\"lng\":104.699717,\"lat\":31.535802},{\"O\":31.53520331587008,\"M\":104.70021018170439,\"lng\":104.70021,\"lat\":31.535203},{\"O\":31.53476895630943,\"M\":104.69942161225401,\"lng\":104.699422,\"lat\":31.534769},{\"O\":31.53502500008442,\"M\":104.69866522931181,\"lng\":104.698665,\"lat\":31.535025},{\"O\":31.535559946419788,\"M\":104.69862231396758,\"lng\":104.698622,\"lat\":31.53556}]'  WHERE  `id` = 18 [ RunTime:0.067498s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:15:48+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001302s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004393s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000266s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:16:35+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.022729s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.006306s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000402s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:17:10+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001246s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004746s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000540s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:17:53+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.002111s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004750s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000325s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:18:30+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001379s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004319s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000246s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:18:42+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001181s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003955s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000225s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:19:34+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.008752s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004918s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000261s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:19:46+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001188s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003744s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000364s ]
+---------------------------------------------------------------
+[ 2018-06-07T17:20:04+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001443s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.004807s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000477s ]
