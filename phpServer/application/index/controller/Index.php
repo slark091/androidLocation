@@ -92,6 +92,7 @@ class Index extends Controller
 
                 $add[] = $item[0];
                 unset($item[0]["operation"]);
+                unset($item[0]["id"]);
                 $login = \think\Db::name("fence")->insert($item[0]);
 
 

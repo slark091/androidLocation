@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:75:"C:\wamp\www\test\phpServer\public/../application/index\view\index\edit.html";i:1528363202;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:75:"C:\wamp\www\test\phpServer\public/../application/index\view\index\edit.html";i:1528364976;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -130,7 +130,6 @@
 
         var path = e.obj.getPath();
         recordPolygons = JSON.stringify(path);
-        console.log(recordPolygons);
         if(checked.value !== JSON.stringify(path)  ){
             checked.value = JSON.stringify(path);
             if(checked.getAttribute("operation")==="origin"){
@@ -173,12 +172,15 @@
 
             }
 
-            console.log(temp[0]);
+            if( $("input[name=fence]:checked")[0].id === value){
+                $("input[name=fence]:checked").attr("checked" , false);
+                map.clearMap();
+            }
+
         });
         var polygon
         $("input[name=fence]").each(function(){
             $(this).click(function(e){
-                console.log(e.target.value);
                 var value = JSON.parse(e.target.value);
                 var id = e.target.id;
                 AMap.service('AMap.DistrictSearch', function() {
@@ -196,7 +198,6 @@
                         var bounds = [];
                         // bounds = [{"M":31.451368308665725,"I":104.54671467578123,"lng":104.546715,"lat":31.451368},{"M":31.338833798081726,"I":104.59065998828123,"lng":104.59066,"lat":31.338834},{"M":31.35759891514965,"I":104.70052326953129,"lng":104.700523,"lat":31.357599},{"M":31.329449835779005,"I":104.85433186328129,"lng":104.854332,"lat":31.32945},{"M":31.376360287779555,"I":104.89827717578123,"lng":104.898277,"lat":31.37636},{"M":31.43262192640987,"I":104.89827717578123,"lng":104.898277,"lat":31.432622},{"M":31.48884981970347,"I":104.81038655078135,"lng":104.810387,"lat":31.48885},{"M":31.51226814095469,"I":104.67855061328129,"lng":104.678551,"lat":31.512268},{"M":31.530998573910583,"I":104.56868733203123,"lng":104.568687,"lat":31.530999},{"M":31.49821785207472,"I":104.48079670703135,"lng":104.480797,"lat":31.498218}];
                         bounds = value;
-                        console.log(  bounds);
                         var polygonArr = new Array();//多边形覆盖物节点坐标数组
 
                         $.each(bounds , function (name , value) {
@@ -269,7 +270,6 @@
         $("input[name=fence]").each(function (e) {
             var temp = this.value;
 
-            console.log( "submit" , this)
 
 
 
@@ -291,7 +291,6 @@
                 "arr" : result
             },
             success:function (e) {
-                console.log(e);
                 alert("edit successfully")
                 location.reload();
 
