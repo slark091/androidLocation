@@ -1,0 +1,33 @@
+---------------------------------------------------------------
+[ 2018-06-06T23:39:52+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/test
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001563s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_test` [ RunTime:0.003928s ]
+[ sql ] [ SQL ] INSERT INTO `location_test` (`time` , `latitude` , `longitude`) VALUES ('test' , 'test' , 'test') [ RunTime:0.020227s ]
+[ error ] [8]未定义数组索引: phone
+---------------------------------------------------------------
+[ 2018-06-06T23:50:07+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.003835s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.006104s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000363s ]
+---------------------------------------------------------------
+[ 2018-06-06T23:50:19+08:00 ] 0.0.0.0 POST /test/phpServer/public/index/index/edit_
+[ sql ] [ DB ] CONNECT:[ UseTime:0.002094s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.005226s ]
+[ sql ] [ SQL ] INSERT INTO `location_fence` (`fence_array` , `id`) VALUES ('[{\"O\":31.77269624393542,\"M\":104.25501908099369,\"lng\":104.255019,\"lat\":31.772696},{\"O\":31.3983451712059,\"M\":105.33167923724369,\"lng\":105.331679,\"lat\":31.398345},{\"O\":30.65460824067484,\"M\":105.17237747943119,\"lng\":105.172377,\"lat\":30.654608},{\"O\":30.92358755514019,\"M\":103.89247025286869,\"lng\":103.89247,\"lat\":30.923588},{\"O\":31.403033831326987,\"M\":103.31568802630619,\"lng\":103.315688,\"lat\":31.403034}]' , 0) [ RunTime:0.029833s ]
+---------------------------------------------------------------
+[ 2018-06-06T23:50:21+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001804s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.007864s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000382s ]
+---------------------------------------------------------------
+[ 2018-06-06T23:50:27+08:00 ] 0.0.0.0 POST /test/phpServer/public/index/index/edit_
+[ sql ] [ DB ] CONNECT:[ UseTime:0.001372s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003569s ]
+[ sql ] [ SQL ] INSERT INTO `location_fence` (`fence_array` , `id`) VALUES ('[]' , 0) [ RunTime:0.021044s ]
+[ sql ] [ SQL ] INSERT INTO `location_fence` (`fence_array` , `id`) VALUES ('[]' , 0) [ RunTime:0.022659s ]
+[ sql ] [ SQL ] INSERT INTO `location_fence` (`fence_array` , `id`) VALUES ('[]' , 0) [ RunTime:0.018180s ]
+---------------------------------------------------------------
+[ 2018-06-06T23:50:28+08:00 ] 0.0.0.0 GET /test/phpServer/public/index/index/edit
+[ sql ] [ DB ] CONNECT:[ UseTime:0.004074s ] mysql:host=127.0.0.1;dbname=location;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `location_fence` [ RunTime:0.003720s ]
+[ sql ] [ SQL ] SELECT * FROM `location_fence` [ RunTime:0.000225s ]
