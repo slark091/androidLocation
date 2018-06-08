@@ -344,11 +344,12 @@ public class testActivity extends Activity implements View.OnClickListener {
     public String post( String method  ,  postStructList list){
 
         final  String info = handleInfo(list);
-        String serverAddress = "location.unix8.net";
+//        String serverAddress = "location.unix8.net";
+        String serverAddress = "localhost";
 
         final String path = "http://" +
                 serverAddress +
-                "/public/index/" +
+                "test/phpServer/public/index/" +
                 method +
                 "";
         new Thread() {
