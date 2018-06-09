@@ -60,13 +60,15 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener  {
 
     final public String tag = "MainActivity";
+
 
     private ImageView clickToLogin;
     private AMapLocationClient aMapLocationClient;
     private AMapLocationClientOption aMapLocationClientOption;
+    private selfFunction func = new selfFunction() ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,18 +86,43 @@ public class MainActivity extends AppCompatActivity
                 try {
                     AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
 
-                    testActivity temp = new testActivity();
 
                     postStructList listData = new postStructList();
                     listData.add("latitude" , aMapLocation.getLatitude());
                     listData.add("longitude" , aMapLocation.getLongitude());
 
 
-                    infoPush(aMapLocation);
-                    temp.post("index/sign" , listData );
+//                    func.infoPush(aMapLocation , MainActivity.this);
+
+                    func.post("index/sign" , listData );
                 }catch (Throwable e){
-                    infoPush((e));
+                    func.infoPush((e) , MainActivity.this);
                 }
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+                View view1 = View.inflate(MainActivity.this , R.layout.calender , null);
+
+                builder.setView(view1);
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
+                dialog.getWindow();
+
+//                AlertDialog alertDialog = builder.create();
+//                alertDialog.show();
+
+
+
+
+
+
+
+
+
+
+
                 
             }
         });
@@ -109,13 +136,13 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//                Intent intent = new Intent(MainActivity.this , testActivity.class);
+//                Intent intent = new Intent(MainActivity.this , loginActivity.class);
 //                startActivity(intent);
 //        ImageView imageView = (ImageView) findViewById(R.id.imageView);
 //        imageView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-////                Intent intent = new Intent(MainActivity.this , testActivity.class);
+////                Intent intent = new Intent(MainActivity.this , loginActivity.class);
 ////                startActivity(intent);
 //
 //
@@ -129,7 +156,7 @@ public class MainActivity extends AppCompatActivity
 //
 //            @Override
 //            public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this , testActivity.class);
+//                Intent intent = new Intent(MainActivity.this , loginActivity.class);
 //                startActivity(intent);
 //            }
 //        });
@@ -142,11 +169,11 @@ public class MainActivity extends AppCompatActivity
                 public void onLocationChanged(AMapLocation aMapLocation) {
                     if(aMapLocation != null){
                         if(aMapLocation.getErrorCode() == 0){
-                            infoPush((aMapLocation.getAltitude()));
+                            func.infoPush((aMapLocation.getAltitude()) , MainActivity.this);
 
 
                         }else{
-                            infoPush(aMapLocation.getErrorInfo());
+                            func.infoPush(aMapLocation.getErrorInfo() , MainActivity.this);
                         }
 
 
@@ -158,7 +185,7 @@ public class MainActivity extends AppCompatActivity
             aMapLocationClient.startLocation();
         }catch (Throwable e){
 //            e.printStackTrace();
-            infoPush((e));
+            func.infoPush((e) , MainActivity.this);
         }
 
 
@@ -223,7 +250,7 @@ public class MainActivity extends AppCompatActivity
 
             return true;
         } else if (id == R.id.fab) {
-            infoPush("sign up");
+            func.infoPush("sign up" , this);
 
         }
 
@@ -237,9 +264,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            infoPush("test");
+            func.infoPush("test" , this);
+
         } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(this, testActivity.class);
+            Intent intent = new Intent(this, loginActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
 //            locationClient.setLocationOption();
@@ -267,50 +295,13 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public boolean infoPush(Object msg){
-        String temp = (msg == null) ? "null" : msg.toString();
-        new  AlertDialog.Builder(this)
-                .setMessage(temp)
-                .show();
-
-
-
-        return true;
-    }
-
-
-
-
-    public boolean test(){
-
-        getApplicationContext().startService(new Intent(this , locationServer.class));
 
 
 
 
 
 
-        return true;
-    }
-    public boolean startAlarm(){
 
-        Intent intent = new Intent("LOCATION_CLOCK");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this , 0  , intent , 0);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        long second = 60*1000;
-        alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP , System.currentTimeMillis() , second , pendingIntent);
-
-
-        return  true;
-    }
-
-    public boolean setTextView( String string ){
-        TextView textView = (TextView) findViewById(R.id.mainText);
-        textView.setText(string);
-
-        return true;
-    }
     private AMapLocationClientOption setDefaultOption(){
         AMapLocationClientOption option = new AMapLocationClientOption();
         option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);

@@ -1,5 +1,7 @@
 package com.example.test.menu;
 
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
@@ -77,8 +79,17 @@ public class selfFunction {
         return "error";
     }
 
-    public String post(final String  info){
-        final String path = "http://192.168.1.100/test/phpServer/public/index/index/test";
+    public String post( String method  ,  postStructList list){
+
+        final  String info = handleInfo(list);
+//        String serverAddress = "location.unix8.net";
+        String serverAddress = "localhost";
+
+        final String path = "http://" +
+                serverAddress +
+                "test/phpServer/public/index/" +
+                method +
+                "";
         new Thread() {
             public void run() {
 //                while (true)
@@ -89,29 +100,47 @@ public class selfFunction {
                         e.printStackTrace();
                     }
                     try {
-                        String pathIn = path + info;
-                        URL url = new URL(pathIn);
+                        URL url = new URL(path);
                         HttpURLConnection conn = (HttpURLConnection) url
                                 .openConnection();
                         conn.setRequestMethod("POST");
                         conn.setReadTimeout(5000);
                         conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                        String data = "postTestData";
-                        conn.setRequestProperty("Content-Length",String.valueOf(data.length()));
+
+                        conn.setRequestProperty("Content-Length",String.valueOf(info.length()));
                         conn.setDoOutput(true);
-                        conn.getOutputStream().write(data.getBytes());
+                        conn.getOutputStream().write(info.getBytes());
+
                         int code = conn.getResponseCode();
                         if (code == 200) {
                             InputStream is = conn.getInputStream();
                             Scanner temp = new Scanner(is).useDelimiter("\\A");
                             String result = temp.hasNext() ? temp.next() : "";
-                            Log.d("post sucess" , result);
+                            switch (result){
+                                case "noAccount":{
+
+                                    break;
+                                }
+                                case "rightCode":{
+
+                                    break;
+                                }
+                                case "wrongCode":{
+
+                                    break;
+                                }
+
+
+                            }
+
+
 //                        String result = StreamTools.ReadStream(is);
 //                        Message msg = Message.obtain();
 //                        msg.what = SUCCESS;
 //                        msg.obj = result;
 //                        handler.sendMessage(msg);
                         } else {
+
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
@@ -124,12 +153,13 @@ public class selfFunction {
         return "test";
     }
 
-    public String handleInfo( List<postStruct> infoArray){
+    public String handleInfo(postStructList list){
+        List<postStruct> infoArray = list.getDataList();
         String info = "";
 
         for(int i = 0 ; i < infoArray.size() ; i++){
             if(info.equals("")){
-                info += "?" + infoArray.get(i).name + "=" + infoArray.get(i).value;
+                info +=  infoArray.get(i).name + "=" + infoArray.get(i).value;
             }else{
                 info += "&" + infoArray.get(i).name + "=" + infoArray.get(i).value;
 
@@ -141,16 +171,12 @@ public class selfFunction {
 
     }
 
-    public void testLog() throws InterruptedException {
-        while (true){
-            Thread.sleep(3000);
-            Log.d("testLogPrint" , "TTTTTTT");
+    public boolean infoPush(Object msg , Context context ){
 
-        }
-
-
-    }
-    public boolean setTextView(String string , R r){
+        String temp = (msg == null) ? "null" : msg.toString();
+        new  AlertDialog.Builder(context)
+                .setMessage(temp)
+                .show();
 
 
 
