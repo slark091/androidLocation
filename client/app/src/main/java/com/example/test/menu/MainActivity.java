@@ -1,63 +1,33 @@
 package com.example.test.menu;
 
-import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.net.HttpURLConnection;
-import java.net.NetworkInterface;
-import java.net.URL;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
-
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.MapView;
+
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.List;
+
+
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener  {
@@ -69,6 +39,9 @@ public class MainActivity extends AppCompatActivity
     private AMapLocationClient aMapLocationClient;
     private AMapLocationClientOption aMapLocationClientOption;
     private selfFunction func = new selfFunction() ;
+
+    private MapView mapView = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +67,13 @@ public class MainActivity extends AppCompatActivity
 
 //                    func.infoPush(aMapLocation , MainActivity.this);
 
-                    func.post("index/sign" , listData );
+//                    LatLng latLng = new LatLng(aMapLocation.getLatitude() , aMapLocation.getLongitude());
+
+//                    Marker marker = new Marker();
+
+                    func.post("index/sign" , listData , MainActivity.this );
                 }catch (Throwable e){
-                    func.infoPush((e) , MainActivity.this);
+//                    func.infoPush((e) , MainActivity.this);
                 }
 
 
@@ -136,19 +113,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//                Intent intent = new Intent(MainActivity.this , loginActivity.class);
-//                startActivity(intent);
-//        ImageView imageView = (ImageView) findViewById(R.id.imageView);
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                Intent intent = new Intent(MainActivity.this , loginActivity.class);
-////                startActivity(intent);
-//
-//
-//
-//            }
-//        });
+
 
         try {
             clickToLogin = (ImageView) findViewById(R.id.imageView);
@@ -169,7 +134,7 @@ public class MainActivity extends AppCompatActivity
                 public void onLocationChanged(AMapLocation aMapLocation) {
                     if(aMapLocation != null){
                         if(aMapLocation.getErrorCode() == 0){
-                            func.infoPush((aMapLocation.getAltitude()) , MainActivity.this);
+//                            func.infoPush((aMapLocation.getAltitude()) , MainActivity.this);
 
 
                         }else{
@@ -187,6 +152,27 @@ public class MainActivity extends AppCompatActivity
 //            e.printStackTrace();
             func.infoPush((e) , MainActivity.this);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        mapView = (MapView) findViewById(R.id.map);
+        mapView.onCreate(savedInstanceState);
+
+
+
+
+
+
 
 
 

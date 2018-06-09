@@ -10,7 +10,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:context="com.xunku.dianjia.home.fragment.CalendarViewFragment"
+        tools:context="com.example.test.menu.fragment.CalendarViewFragment"
         android:id="@+id/calendarFrameLaout"
 
         >
@@ -20,9 +20,12 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/mcv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:mcv_selectionColor="#00f"
+
                 >
             </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
         </LinearLayout>

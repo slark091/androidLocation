@@ -2,9 +2,6 @@ package com.example.test.menu;
 
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
-import android.util.Log;
-import android.widget.TextView;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -12,7 +9,6 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -79,7 +75,7 @@ public class selfFunction {
         return "error";
     }
 
-    public String post( String method  ,  postStructList list){
+    public String post( String method  ,  postStructList list , Context context ){
 
         final  String info = handleInfo(list);
 //        String serverAddress = "location.unix8.net";
@@ -87,7 +83,7 @@ public class selfFunction {
 
         final String path = "http://" +
                 serverAddress +
-                "test/phpServer/public/index/" +
+                "/test/phpServer/public/index/" +
                 method +
                 "";
         new Thread() {
@@ -126,6 +122,14 @@ public class selfFunction {
                                     break;
                                 }
                                 case "wrongCode":{
+
+                                    break;
+                                }
+                                case "outOfArea":{
+
+                                    break;
+                                }
+                                case "inArea":{
 
                                     break;
                                 }
