@@ -1,6 +1,11 @@
 package com.example.test.menu;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 
 import java.io.InputStream;
@@ -11,8 +16,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-
 
 
 /**
@@ -53,6 +56,33 @@ class postStruct{
 
 public class selfFunction {
 
+
+
+    selfFunction(){
+        init();
+    }
+
+    //init selfFunction
+
+    private String tag = "selfFunction";
+    public Handler handler;
+
+    private void init(){
+        HandlerThread thread = new HandlerThread(tag);
+        thread.start();
+        handler = new Handler(thread.getLooper()){
+
+            public void  handleMessage(Message msg){
+
+                infoPush("test" , (Context) msg.obj);
+
+//                Log.d(tag , msg.getData().get("data").toString());
+            }
+        };
+    }
+
+    //init selfFunction
+
     public static String md5(String string) {
         string += "test";
 
@@ -75,14 +105,29 @@ public class selfFunction {
         return "error";
     }
 
-    public String post( String method  ,  postStructList list , Context context ){
+    class  selfFunctionThread extends Thread{
+        private Looper looper;
+        public  void  run(){
+            Looper.prepare();
+            looper = Looper.myLooper();
+            Looper.loop();
+        }
+
+    }
+
+
+
+
+
+    public String post(String method  , postStructList list , final Context context ){
 
         final  String info = handleInfo(list);
 //        String serverAddress = "location.unix8.net";
-        String serverAddress = "localhost";
+        String serverAddress = "192.168.1.100";
 
         final String path = "http://" +
                 serverAddress +
+//                "/public/index/" +
                 "/test/phpServer/public/index/" +
                 method +
                 "";
@@ -109,46 +154,38 @@ public class selfFunction {
 
                         int code = conn.getResponseCode();
                         if (code == 200) {
-                            InputStream is = conn.getInputStream();
-                            Scanner temp = new Scanner(is).useDelimiter("\\A");
-                            String result = temp.hasNext() ? temp.next() : "";
-                            switch (result){
-                                case "noAccount":{
-
-                                    break;
-                                }
-                                case "rightCode":{
-
-                                    break;
-                                }
-                                case "wrongCode":{
-
-                                    break;
-                                }
-                                case "outOfArea":{
-
-                                    break;
-                                }
-                                case "inArea":{
-
-                                    break;
-                                }
 
 
-                            }
+                                InputStream is = conn.getInputStream();
+                                Scanner temp = new Scanner(is).useDelimiter("\\A");
+                                final String result = temp.hasNext() ? temp.next() : "";
 
 
-//                        String result = StreamTools.ReadStream(is);
-//                        Message msg = Message.obtain();
-//                        msg.what = SUCCESS;
-//                        msg.obj = result;
-//                        handler.sendMessage(msg);
+                                Message msg = Message.obtain();
+
+                                msg.what = 1;
+                                msg.obj = context;
+
+                                Bundle bundle = new Bundle();
+                                bundle.putString("data" , result);
+
+                                msg.setData(bundle);
+
+
+                                handler.sendMessage(msg);
+
+
+
+
+
                         } else {
 
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
+
+
                     }
                 }
 

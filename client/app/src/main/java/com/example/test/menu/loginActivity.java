@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -73,6 +74,8 @@ public class loginActivity extends Activity implements View.OnClickListener {
     private RelativeLayout mPsw;
     private CheckBox eyeSelector;
 
+    private Handler handler;
+
     public static final String regexMobile = "^((17[0-9])|(14[0-9])|(13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";
     public static final String REGEX_PASSWORD = "\"^(?=.*?[a-z])(?=.*?[0-9])[a-zA-Z0-9_]{6,20}$\"";
 
@@ -97,6 +100,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
         mBtnLogin.setOnClickListener(this);
         loginTitleBack.setOnClickListener(this);
         loginPage.setOnClickListener(this);
+
 
         eyeSelector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

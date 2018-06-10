@@ -2,6 +2,7 @@ package com.example.test.menu;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.amap.api.location.AMapLocation;
@@ -54,6 +56,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +79,7 @@ public class MainActivity extends AppCompatActivity
 //                    LatLng latLng = new LatLng(aMapLocation.getLatitude() , aMapLocation.getLongitude());
 
 //                    Marker marker = new Marker();
+                    Message msg = Message.obtain();
 
                     func.post("index/sign" , listData , MainActivity.this );
                 }catch (Throwable e){
@@ -86,6 +92,8 @@ public class MainActivity extends AppCompatActivity
                 View view1 = View.inflate(MainActivity.this , R.layout.calender , null);
 
                 materialCalendarView = (MaterialCalendarView) view1.findViewById(R.id.mcv);
+                ImageButton imageButton = (ImageButton) view1.findViewById(R.id.sign_submit);
+
                 materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_NONE);
 
                 Date testDate = new Date();
@@ -95,8 +103,22 @@ public class MainActivity extends AppCompatActivity
 
                 materialCalendarView.setDateSelected(Calendar.getInstance().getTime() , true);
                 materialCalendarView.setDateSelected(testDate , true);
-                
 
+                imageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
+
+
+                        postStructList listData = new postStructList();
+                        listData.add("lat" , aMapLocation.getLatitude());
+                        listData.add("lng" , aMapLocation.getLongitude());
+                        func.infoPush(aMapLocation.getLongitude() , MainActivity.this);
+                        func.post("edit/index" , listData , MainActivity.this );
+
+                    }
+                });
 
 
 
@@ -106,19 +128,6 @@ public class MainActivity extends AppCompatActivity
 
                 dialog.show();
                 dialog.getWindow();
-
-//                AlertDialog alertDialog = builder.create();
-//                alertDialog.show();
-
-
-
-
-
-
-
-
-
-
 
                 
             }
@@ -331,16 +340,16 @@ public class MainActivity extends AppCompatActivity
     private AMapLocationClientOption setDefaultOption(){
         AMapLocationClientOption option = new AMapLocationClientOption();
         option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        option.setGpsFirst(false);
+        option.setGpsFirst(true);
         option.setHttpTimeOut(33333);
         int interval = 2*1000;
         option.setInterval(interval);
         option.setNeedAddress(true);
-        option.setOnceLocation(false);
-        option.setOnceLocationLatest(false);
+        option.setOnceLocation(true);
+        option.setOnceLocationLatest(true);
         AMapLocationClientOption.setLocationProtocol(
                 AMapLocationClientOption.AMapLocationProtocol.HTTP);
-        option.setSensorEnable(false);
+        option.setSensorEnable(true);
         option.setWifiScan(true);
         option.setLocationCacheEnable(true);
         return option;
