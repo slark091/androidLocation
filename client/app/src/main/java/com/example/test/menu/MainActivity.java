@@ -2,7 +2,6 @@ package com.example.test.menu;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,10 +23,11 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.MapView;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.net.NetworkInterface;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 
@@ -86,7 +85,23 @@ public class MainActivity extends AppCompatActivity
 
                 View view1 = View.inflate(MainActivity.this , R.layout.calender , null);
 
+                materialCalendarView = (MaterialCalendarView) view1.findViewById(R.id.mcv);
+                materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_NONE);
+
+                Date testDate = new Date();
+                testDate.setDate(12);
+
+                CalendarDay temp =  CalendarDay.from(testDate);
+
+                materialCalendarView.setDateSelected(Calendar.getInstance().getTime() , true);
+                materialCalendarView.setDateSelected(testDate , true);
+                
+
+
+
+
                 builder.setView(view1);
+
                 AlertDialog dialog = builder.create();
 
                 dialog.show();
@@ -158,46 +173,7 @@ public class MainActivity extends AppCompatActivity
             func.infoPush((e) , MainActivity.this);
         }
 
-//        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.layout.activity_main);
 
-        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-
-        View view = inflater.inflate(R.layout.calender , drawer , false);
-
-
-
-        materialCalendarView = (MaterialCalendarView) view.findViewById(R.id.mcv);
-//        materialCalendarView.state();
-//        materialCalendarView.state().edit()
-
-
-
-
-
-
-        try{
-//            materialCalendarView.setClickable(false);
-//            func.infoPush(materialCalendarView , MainActivity.this);
-
-
-            materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_NONE);
-
-            materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
-                @Override
-                public void onDateSelected(@NonNull MaterialCalendarView materialCalendarViewIn, @NonNull CalendarDay calendarDayIn, boolean b) {
-
-                    calendarDay = calendarDayIn;
-                    func.infoPush(calendarDay , MainActivity.this);
-                }
-            });
-
-
-
-
-        }catch (Throwable e){
-            func.infoPush(e , MainActivity.this);
-
-        }
 
 
 
