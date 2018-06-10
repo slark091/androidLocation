@@ -2,7 +2,6 @@ package com.example.test.menu;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -64,29 +63,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-//                infoPush(getAdressMacByInterface());
-                try {
-                    AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
-
-
-                    postStructList listData = new postStructList();
-                    listData.add("latitude" , aMapLocation.getLatitude());
-                    listData.add("longitude" , aMapLocation.getLongitude());
-
-
-//                    func.infoPush(aMapLocation , MainActivity.this);
-
-//                    LatLng latLng = new LatLng(aMapLocation.getLatitude() , aMapLocation.getLongitude());
-
-//                    Marker marker = new Marker();
-                    Message msg = Message.obtain();
-
-                    func.post("index/sign" , listData , MainActivity.this );
-                }catch (Throwable e){
-//                    func.infoPush((e) , MainActivity.this);
-                }
-
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
                 View view1 = View.inflate(MainActivity.this , R.layout.calender , null);
@@ -103,6 +79,8 @@ public class MainActivity extends AppCompatActivity
 
                 materialCalendarView.setDateSelected(Calendar.getInstance().getTime() , true);
                 materialCalendarView.setDateSelected(testDate , true);
+
+                func.infoPush(materialCalendarView.getSelectedDates() , MainActivity.this );
 
                 imageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -305,12 +283,11 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, loginActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
-//            locationClient.setLocationOption();
 
 
-//            AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
-//            infoPush(String.valueOf(aMapLocation.getLatitude()));
-//            infoPush(String.valueOf(aMapLocation == null) );
+
+            func.loading(MainActivity.this);
+
 
 
 

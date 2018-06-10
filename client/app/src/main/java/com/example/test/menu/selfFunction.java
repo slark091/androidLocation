@@ -1,12 +1,15 @@
 package com.example.test.menu;
 
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.view.WindowManager;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -73,6 +76,8 @@ public class selfFunction {
         handler = new Handler(thread.getLooper()){
 
             public void  handleMessage(Message msg){
+                Context context = (Context) msg.obj;
+
 
                 infoPush("test" , (Context) msg.obj);
 
@@ -119,7 +124,7 @@ public class selfFunction {
 
 
 
-    public String post(String method  , postStructList list , final Context context ){
+    public String post(final String method  , postStructList list , final Context context ){
 
         final  String info = handleInfo(list);
 //        String serverAddress = "location.unix8.net";
@@ -168,6 +173,7 @@ public class selfFunction {
 
                                 Bundle bundle = new Bundle();
                                 bundle.putString("data" , result);
+                                bundle.putString("name" , method );
 
                                 msg.setData(bundle);
 
@@ -192,6 +198,29 @@ public class selfFunction {
             }
         }.start();
         return "test";
+    }
+
+    public void  loading(Context context){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        View view1 = View.inflate(context , R.layout.loading , null);
+
+        builder.setView(view1);
+
+        AlertDialog dialog = builder.create();
+
+
+
+
+        dialog.show();
+
+
+        WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+        layoutParams.alpha = 0.3f;
+        layoutParams.format = PixelFormat.TRANSLUCENT;
+        dialog.getWindow().setAttributes(layoutParams);
+
     }
 
     public String handleInfo(postStructList list){

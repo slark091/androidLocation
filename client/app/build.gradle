@@ -36,6 +36,7 @@ dependencies {
 
     compile 'com.prolificinteractive:material-calendarview:1.4.0'
 
+    compile 'com.github.zzz40500:android-shapeLoadingView:1.0.3.2'
 
 //    compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
