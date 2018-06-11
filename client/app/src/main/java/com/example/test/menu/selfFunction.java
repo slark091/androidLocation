@@ -57,11 +57,14 @@ class postStruct{
 
 
 
+
+
 public class selfFunction {
 
 
 
-    selfFunction(){
+    selfFunction(Context context){
+        selfFunctionContext = context;
         init();
     }
 
@@ -71,6 +74,10 @@ public class selfFunction {
     public Handler handler;
 
     private AlertDialog dialog;
+
+    public Context selfFunctionContext ;
+
+
 
     private void init(){
         HandlerThread thread = new HandlerThread(tag);
@@ -207,6 +214,11 @@ public class selfFunction {
         return "test";
     }
 
+    public String post(final  String method , postStructList list){
+
+        return post(method , list  , selfFunctionContext);
+    }
+
     public void  loading(Context context){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -229,6 +241,9 @@ public class selfFunction {
         dialog.getWindow().setAttributes(layoutParams);
 
     }
+    public void loading(){
+        loading(selfFunctionContext);
+    }
 
     public String handleInfo(postStructList list){
         List<postStruct> infoArray = list.getDataList();
@@ -248,7 +263,7 @@ public class selfFunction {
 
     }
 
-    public boolean infoPush(Object msg , Context context ){
+    public boolean infoPush(Object msg , Context context   ){
 
         String temp = (msg == null) ? "null" : msg.toString();
         new  AlertDialog.Builder(context)
@@ -258,6 +273,11 @@ public class selfFunction {
 
 
         return true;
+    }
+    public boolean infoPush(Object msg){
+
+        return infoPush(msg , selfFunctionContext);
+
     }
 
 }

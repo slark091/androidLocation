@@ -8,6 +8,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -36,7 +37,7 @@ import android.widget.TextView;
 public class loginActivity extends Activity implements View.OnClickListener {
 
     private  String tag = "loginActivity";
-    private selfFunction func = new selfFunction() ;
+    private selfFunction func = new selfFunction(loginActivity.this) ;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -287,7 +288,11 @@ public class loginActivity extends Activity implements View.OnClickListener {
                 listData.add("code" , codeInput.getText());
 
 //                handleInfo(listData);
-                func.post( "index/test" , (listData) , loginActivity.this );
+                func.post( "index/test" , (listData));
+
+
+
+
 
 
                 break;
@@ -299,7 +304,12 @@ public class loginActivity extends Activity implements View.OnClickListener {
             case R.id.login_title_sign_up:{
                 Intent intent = new Intent( loginActivity.this , signUpActivity.class);
 //                recovery();
-                startActivity(intent);
+                SharedPreferences sharedPreferences = getSharedPreferences("login" , MODE_PRIVATE);
+                func.infoPush(sharedPreferences.getString("phone" , "null") );
+
+
+
+//                startActivity(intent);
                 break;
             }
 

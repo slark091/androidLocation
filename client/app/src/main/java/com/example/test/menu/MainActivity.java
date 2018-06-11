@@ -1,6 +1,7 @@
 package com.example.test.menu;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView clickToLogin;
     private AMapLocationClient aMapLocationClient;
     private AMapLocationClientOption aMapLocationClientOption;
-    private selfFunction func = new selfFunction() ;
+    private selfFunction func = new selfFunction(MainActivity.this) ;
 
     private MapView mapView = null;
     private MaterialCalendarView materialCalendarView ;
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity
                 imageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        func.loading(MainActivity.this);
+                        func.loading();
 
                         AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
 
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity
                         postStructList listData = new postStructList();
                         listData.add("lat" , aMapLocation.getLatitude());
                         listData.add("lng" , aMapLocation.getLongitude());
-                        func.post("edit/index" , listData , MainActivity.this );
+                        func.post("edit/index" , listData  );
 
                     }
                 });
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity
 
 
                         }else{
-                            func.infoPush(aMapLocation.getErrorInfo() , MainActivity.this);
+                            func.infoPush(aMapLocation.getErrorInfo() );
                         }
 
 
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity
             aMapLocationClient.startLocation();
         }catch (Throwable e){
 //            e.printStackTrace();
-            func.infoPush((e) , MainActivity.this);
+            func.infoPush((e) );
         }
 
         mapView = (MapView) findViewById(R.id.map);
@@ -248,9 +249,17 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_slideshow) {
 
 
+            SharedPreferences.Editor editor = getSharedPreferences("login" , MODE_PRIVATE).edit();
+
+            SharedPreferences sharedPreferences = getSharedPreferences("login" , MODE_PRIVATE);
 
 
+            func.infoPush(sharedPreferences.getString("phone" , "null"));
 
+            editor.putString("phone" , "15281140795");
+            editor.commit();
+
+            func.infoPush(sharedPreferences.getString("phone" , "null") );
 
 
         } else if (id == R.id.nav_manage) {
