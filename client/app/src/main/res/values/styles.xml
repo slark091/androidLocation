@@ -6,6 +6,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!--added by slark091-->
+        <item name="android:windowContentTransitions">true</item>
+
+        <!--added by slark091-->
+
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -16,4 +22,6 @@
     <style name="loading" parent="@android:style/Theme.Holo.Dialog">
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+
 </resources>

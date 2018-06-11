@@ -1,6 +1,7 @@
 package com.example.test.menu;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +9,8 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
+import android.transition.Transition;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -19,6 +22,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -78,8 +83,32 @@ public class selfFunction {
     public Context selfFunctionContext ;
 
 
+    public     SharedPreferences.Editor editor;
+    public     SharedPreferences sharedPreferences;
+    private Transition transition;
+
+
 
     private void init(){
+
+
+
+
+
+
+
+        try {
+            ;
+        }catch (Throwable e ){
+
+            Log.d(tag , e.toString());
+        }
+
+        editor = selfFunctionContext.getSharedPreferences("login" , MODE_PRIVATE).edit();
+
+
+        sharedPreferences = selfFunctionContext.getSharedPreferences("login" , MODE_PRIVATE);
+
         HandlerThread thread = new HandlerThread(tag);
         thread.start();
         handler = new Handler(thread.getLooper()){

@@ -7,11 +7,9 @@ import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
@@ -37,12 +35,14 @@ import android.widget.TextView;
 public class loginActivity extends Activity implements View.OnClickListener {
 
     private  String tag = "loginActivity";
-    private selfFunction func = new selfFunction(loginActivity.this) ;
+    private selfFunction func ;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.index);
         initView();
+
 
     }
 
@@ -75,13 +75,17 @@ public class loginActivity extends Activity implements View.OnClickListener {
     private RelativeLayout mPsw;
     private CheckBox eyeSelector;
 
-    private Handler handler;
+
+
+
+
 
     public static final String regexMobile = "^((17[0-9])|(14[0-9])|(13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";
     public static final String REGEX_PASSWORD = "\"^(?=.*?[a-z])(?=.*?[0-9])[a-zA-Z0-9_]{6,20}$\"";
 
     private void initView() {
 
+        func = new selfFunction(loginActivity.this) ;
 
         mBtnLogin = (ImageButton) findViewById(R.id.main_btn_login);
         progress = findViewById(R.id.layout_progress);
@@ -302,14 +306,19 @@ public class loginActivity extends Activity implements View.OnClickListener {
                 break;
             }
             case R.id.login_title_sign_up:{
-                Intent intent = new Intent( loginActivity.this , signUpActivity.class);
-//                recovery();
-                SharedPreferences sharedPreferences = getSharedPreferences("login" , MODE_PRIVATE);
-                func.infoPush(sharedPreferences.getString("phone" , "null") );
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                View view1 = View.inflate(this , R.layout.sign_up , null);
+                
+
+                builder.setView(view1);
+
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
+                dialog.getWindow();
 
 
-
-//                startActivity(intent);
                 break;
             }
 

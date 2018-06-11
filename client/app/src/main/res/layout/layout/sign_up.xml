@@ -2,15 +2,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff"
     android:id="@+id/login_page"
-    tools:context=".loginActivity" >
+    tools:context=".loginActivity">
 
 
-    <CalendarView
-        android:id="@+id/calendarView2"
-        android:layout_width="wrap_content"
+
+
+
+
+
+    <com.jkb.vcedittext.VerificationCodeEditText
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:inputType="number"
+        android:text="123"
+        android:textColor="#affaaa"
+        android:textSize="40sp"
+        app:bottomLineHeight="2dp"
+        app:figures="4"
+        app:verCodeMargin="10dp"
+        android:layout_centerVertical="true"
+        android:id="@+id/phone"
+
+        />
+
+
+
+
 </RelativeLayout>

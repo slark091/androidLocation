@@ -1,7 +1,6 @@
 package com.example.test.menu;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView clickToLogin;
     private AMapLocationClient aMapLocationClient;
     private AMapLocationClientOption aMapLocationClientOption;
-    private selfFunction func = new selfFunction(MainActivity.this) ;
+    private selfFunction func;
 
     private MapView mapView = null;
     private MaterialCalendarView materialCalendarView ;
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        func = new selfFunction(MainActivity.this) ;
 
 
 
@@ -245,21 +244,14 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_gallery) {
             Intent intent = new Intent(this, loginActivity.class);
+
+
+
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
 
 
-            SharedPreferences.Editor editor = getSharedPreferences("login" , MODE_PRIVATE).edit();
-
-            SharedPreferences sharedPreferences = getSharedPreferences("login" , MODE_PRIVATE);
-
-
-            func.infoPush(sharedPreferences.getString("phone" , "null"));
-
-            editor.putString("phone" , "15281140795");
-            editor.commit();
-
-            func.infoPush(sharedPreferences.getString("phone" , "null") );
+            func.infoPush(func.sharedPreferences.getString("phone" , "null") );
 
 
         } else if (id == R.id.nav_manage) {
