@@ -3,6 +3,7 @@
     android:orientation="vertical" android:layout_width="0dip"
     android:layout_height="0dip"
 
+
     >
 
     <com.mingle.widget.LoadingView
@@ -19,5 +20,6 @@
         android:textSize="30dip"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:textColor="#facd"
         />
 </RelativeLayout>

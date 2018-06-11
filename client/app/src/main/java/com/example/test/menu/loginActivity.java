@@ -78,8 +78,6 @@ public class loginActivity extends Activity implements View.OnClickListener {
 
 
 
-
-
     public static final String regexMobile = "^((17[0-9])|(14[0-9])|(13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";
     public static final String REGEX_PASSWORD = "\"^(?=.*?[a-z])(?=.*?[0-9])[a-zA-Z0-9_]{6,20}$\"";
 
@@ -306,9 +304,10 @@ public class loginActivity extends Activity implements View.OnClickListener {
                 break;
             }
             case R.id.login_title_sign_up:{
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this , R.style.dialog);
 
                 View view1 = View.inflate(this , R.layout.sign_up , null);
+
                 
 
                 builder.setView(view1);

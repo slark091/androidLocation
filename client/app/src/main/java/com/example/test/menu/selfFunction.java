@@ -2,7 +2,6 @@ package com.example.test.menu;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -12,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.transition.Transition;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -121,9 +119,10 @@ public class selfFunction {
                     @Override
                     public void run() {
                         mainActivity.imageButton.setVisibility(View.GONE);
+                        dialog.cancel();
+
                     }
                 });
-                dialog.cancel();
 
             }
         };
@@ -250,12 +249,12 @@ public class selfFunction {
 
     public void  loading(Context context){
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context , R.style.dialog);
 
         View view1 = View.inflate(context , R.layout.loading , null);
 
         builder.setView(view1);
-
+        builder.setCancelable(false);
         dialog = builder.create();
 
 
@@ -263,11 +262,6 @@ public class selfFunction {
 
         dialog.show();
 
-
-        WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-        layoutParams.alpha = 0.3f;
-        layoutParams.format = PixelFormat.TRANSLUCENT;
-        dialog.getWindow().setAttributes(layoutParams);
 
     }
     public void loading(){

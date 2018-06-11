@@ -1,33 +1,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#ffffff"
     android:id="@+id/login_page"
     tools:context=".loginActivity">
 
 
 
-
-
-
-
-    <com.jkb.vcedittext.VerificationCodeEditText
+    <com.tuo.customview.VerificationCodeView
+        android:id="@+id/icv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:text="123"
-        android:textColor="#affaaa"
-        android:textSize="40sp"
-        app:bottomLineHeight="2dp"
-        app:figures="4"
-        app:verCodeMargin="10dp"
-        android:layout_centerVertical="true"
-        android:id="@+id/phone"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="26dp"
+        app:icv_et_number="4"
+        app:icv_et_pwd="true"
+        app:icv_et_pwd_radius="10dp"
+        app:icv_et_text_color="#000000"
+        app:icv_et_width="50dp"
+
 
         />
-
 
 
 
