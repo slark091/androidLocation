@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
     private MapView mapView = null;
     private MaterialCalendarView materialCalendarView ;
     private CalendarDay calendarDay;
-
+    public ImageButton imageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity
                 View view1 = View.inflate(MainActivity.this , R.layout.calender , null);
 
                 materialCalendarView = (MaterialCalendarView) view1.findViewById(R.id.mcv);
-                ImageButton imageButton = (ImageButton) view1.findViewById(R.id.sign_submit);
+                imageButton = (ImageButton) view1.findViewById(R.id.sign_submit);
 
                 materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_NONE);
 
@@ -80,11 +80,11 @@ public class MainActivity extends AppCompatActivity
                 materialCalendarView.setDateSelected(Calendar.getInstance().getTime() , true);
                 materialCalendarView.setDateSelected(testDate , true);
 
-                func.infoPush(materialCalendarView.getSelectedDates() , MainActivity.this );
 
                 imageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        func.loading(MainActivity.this);
 
                         AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
 
@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity
                         postStructList listData = new postStructList();
                         listData.add("lat" , aMapLocation.getLatitude());
                         listData.add("lng" , aMapLocation.getLongitude());
-                        func.infoPush(aMapLocation.getLongitude() , MainActivity.this);
                         func.post("edit/index" , listData , MainActivity.this );
 
                     }
@@ -141,7 +140,6 @@ public class MainActivity extends AppCompatActivity
                 public void onLocationChanged(AMapLocation aMapLocation) {
                     if(aMapLocation != null){
                         if(aMapLocation.getErrorCode() == 0){
-//                            func.infoPush((aMapLocation.getAltitude()) , MainActivity.this);
 
 
                         }else{
@@ -159,39 +157,6 @@ public class MainActivity extends AppCompatActivity
 //            e.printStackTrace();
             func.infoPush((e) , MainActivity.this);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
@@ -263,7 +228,6 @@ public class MainActivity extends AppCompatActivity
 
             return true;
         } else if (id == R.id.fab) {
-            func.infoPush("sign up" , this);
 
         }
 
@@ -277,7 +241,6 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            func.infoPush("test" , this);
 
         } else if (id == R.id.nav_gallery) {
             Intent intent = new Intent(this, loginActivity.class);
@@ -286,7 +249,6 @@ public class MainActivity extends AppCompatActivity
 
 
 
-            func.loading(MainActivity.this);
 
 
 

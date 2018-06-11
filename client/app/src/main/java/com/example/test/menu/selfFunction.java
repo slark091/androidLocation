@@ -70,6 +70,8 @@ public class selfFunction {
     private String tag = "selfFunction";
     public Handler handler;
 
+    private AlertDialog dialog;
+
     private void init(){
         HandlerThread thread = new HandlerThread(tag);
         thread.start();
@@ -78,10 +80,15 @@ public class selfFunction {
             public void  handleMessage(Message msg){
                 Context context = (Context) msg.obj;
 
+                final MainActivity mainActivity = (MainActivity) context;
+                mainActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mainActivity.imageButton.setVisibility(View.GONE);
+                    }
+                });
+                dialog.cancel();
 
-                infoPush("test" , (Context) msg.obj);
-
-//                Log.d(tag , msg.getData().get("data").toString());
             }
         };
     }
@@ -208,7 +215,7 @@ public class selfFunction {
 
         builder.setView(view1);
 
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
 
 
 
