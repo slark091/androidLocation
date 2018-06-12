@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:75:"C:\wamp\www\test\phpServer\public/../application/index\view\index\edit.html";i:1528476887;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:75:"C:\wamp\www\test\phpServer\public/../application/index\view\index\edit.html";i:1528618973;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -18,6 +18,7 @@ class Edit extends Controller
          $position =  $_POST;
 
         $fence = \think\Db::name("fence")->field("fence_array")->select();
+
         $tempArea = null;
         foreach ($fence as $items) {
             $tempFenceArray = null;
@@ -32,13 +33,31 @@ class Edit extends Controller
             $tempArea[] = $tempFenceArray;
 
         }
-        error_log(print_r($tempArea , 1 ) , 3 , "./log.txt");
 
         $testArea = new Area($tempArea);
+
         if($testArea->checkPoint($position["lng"],$position["lat"]) === false){
-            return false;
+
+            return "outOfArea";
+
+
         }else{
-            return true;
+            $phone = $_POST["phone"];
+            $where["phone"] = $phone;
+
+            $user = \think\Db::name("username")->where($where)->find();
+
+            $insert["time"] = $_POST["time"];
+            $insert["uid"] = $user["id"];
+            $day=((int)substr($_POST["time"],8,2));
+            error_log(print_r(("\n=============================================\n"), 1 ) , 3 , "./log.txt");
+            error_log(print_r(($day), 1 ) , 3 , "./log.txt");
+            error_log(print_r(("\n=============================================\n"), 1 ) , 3 , "./log.txt");
+
+
+            $res = \think\Db::name("calendar")->insert($insert);
+
+            return $_POST["time"] ;
         }
 
     }
@@ -227,5 +246,8 @@ class Area{
     }
 }
 //$area = new Area($area);
+
+
+
 
 ?>
