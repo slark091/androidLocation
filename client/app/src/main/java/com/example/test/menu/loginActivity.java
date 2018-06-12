@@ -28,6 +28,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.tuo.customview.VerificationCodeView;
+
 /**
  * Created by test on 18-6-1.
  */
@@ -43,6 +45,12 @@ public class loginActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.index);
         initView();
 
+
+        String  username = func.sharedPreferences.getString("phone" , "");
+        String code = func.sharedPreferences.getString("code", "");
+
+        userNmaeInput.setText(username);
+        codeInput.setText(code);
 
     }
 
@@ -60,7 +68,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
 
     private ImageButton mBtnLogin;
 
-    private EditText userNmaeInput , codeInput;
+    public EditText userNmaeInput , codeInput;
 
     private ImageView loginTitleBack , loginTitleSignUp ;
 
@@ -79,8 +87,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
 
 
     public static final String regexMobile = "^((17[0-9])|(14[0-9])|(13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";
-    public static final String REGEX_PASSWORD = "\"^(?=.*?[a-z])(?=.*?[0-9])[a-zA-Z0-9_]{6,20}$\"";
-
+    public static final String REGEX_PASSWORD = "^([A-Z]|[a-z]|[0-9]|[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“'。，、？]){6,20}$";
     private void initView() {
 
         func = new selfFunction(loginActivity.this) ;
@@ -170,7 +177,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
             @Override
             public void afterTextChanged(Editable s) {
                 String code = String.valueOf(s);
-                if(code.matches("^(?=.*?[a-z])(?=.*?[0-9])[a-zA-Z0-9_]{6,16}$")){
+                if(code.matches(REGEX_PASSWORD)){
                     if(recordUserNameInput[0].matches(regexMobile)){
                         mBtnLogin.setVisibility(View.VISIBLE);
                     }else{
@@ -290,9 +297,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
                 listData.add("code" , codeInput.getText());
 
 //                handleInfo(listData);
-                func.post( "index/test" , (listData));
-
-
+                func.post( "index/login" , (listData));
 
 
 
@@ -306,16 +311,23 @@ public class loginActivity extends Activity implements View.OnClickListener {
             case R.id.login_title_sign_up:{
                 AlertDialog.Builder builder = new AlertDialog.Builder(this , R.style.dialog);
 
-                View view1 = View.inflate(this , R.layout.sign_up , null);
 
-                
 
-                builder.setView(view1);
 
-                AlertDialog dialog = builder.create();
+                try{
+                    builder.setView(initSignUp(this));
 
-                dialog.show();
-                dialog.getWindow();
+                }catch (Throwable e){
+
+                    func.infoPush(e);
+                }
+
+
+                signDialog = builder.create();
+
+                signDialog.setCanceledOnTouchOutside(false);
+                signDialog.show();
+                signDialog.getWindow();
 
 
                 break;
@@ -340,8 +352,8 @@ public class loginActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    private void recovery() {
-        progress.setVisibility(View.GONE);
+    public void recovery() {
+        progress.setVisibility(View.INVISIBLE);
         mInputLayout.setVisibility(View.VISIBLE);
         mName.setVisibility(View.VISIBLE);
         mPsw.setVisibility(View.VISIBLE);
@@ -366,6 +378,139 @@ public class loginActivity extends Activity implements View.OnClickListener {
     //
     //
     //
+
+    public LinearLayout sign_up1 ;
+    public LinearLayout sign_up2 ;
+    public LinearLayout sign_up3 ;
+    public VerificationCodeView verificationCodeView;
+    public AlertDialog signDialog;
+
+    private View initSignUp(Context context){
+
+        View view = View.inflate(context , R.layout.sign_up , null);
+
+        final EditText phone = (EditText) view.findViewById(R.id.userNameInput1);
+        final EditText code = (EditText) view.findViewById(R.id.userNameInput2);
+        final ImageButton imageButton1 = (ImageButton) view.findViewById(R.id.main_btn_login1);
+        final ImageButton imageButton3 = (ImageButton) view.findViewById(R.id.main_btn_login2);
+
+
+
+
+
+        verificationCodeView = (VerificationCodeView) view.findViewById(R.id.icv);
+        sign_up1 = (LinearLayout) view.findViewById(R.id.sign_up1);
+        sign_up2 = (LinearLayout) view.findViewById(R.id.sign_up2);
+        sign_up3 = (LinearLayout) view.findViewById(R.id.sign_up3);
+
+        phone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String judge = String.valueOf(s);
+                if (judge.matches(regexMobile)) {
+                    imageButton1.setVisibility(View.VISIBLE);
+                } else {
+                    imageButton1.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        code.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String code = String.valueOf(s);
+                if(code.matches(REGEX_PASSWORD)){
+                        imageButton3.setVisibility(View.VISIBLE);
+                    }else{
+                        imageButton3.setVisibility(View.INVISIBLE);
+                    }
+
+            }
+        });
+
+        imageButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                func.loading();
+                postStructList listData = new postStructList();
+                listData.add("phone" , phone.getText().toString());
+                func.post("index/getMsg" , listData );
+
+            }
+        });
+
+        imageButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                func.loading();
+                postStructList listData = new postStructList();
+                listData.add("phone" , phone.getText().toString());
+                listData.add("code" , code.getText().toString());
+                func.post("index/signUp" , listData );
+            }
+        });
+
+        verificationCodeView.setInputCompleteListener(new VerificationCodeView.InputCompleteListener() {
+            @Override
+            public void inputComplete() {
+                String temp = verificationCodeView.getInputContent();
+                if(temp.length() == verificationCodeView.getEtNumber()){
+                    func.loading();
+
+
+
+
+
+
+                    postStructList listData = new postStructList();
+                    listData.add("phone" , phone.getText().toString());
+                    listData.add("verifyCode" , temp);
+
+                    func.post("index/sign" , listData);
+
+
+
+                }
+
+            }
+
+            @Override
+            public void deleteContent() {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+        return view;
+
+    }
 
 
 }

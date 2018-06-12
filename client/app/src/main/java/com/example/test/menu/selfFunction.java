@@ -11,6 +11,10 @@ import android.support.v7.app.AlertDialog;
 import android.transition.Transition;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -76,7 +80,7 @@ public class selfFunction {
     private String tag = "selfFunction";
     public Handler handler;
 
-    private AlertDialog dialog;
+    private AlertDialog loadingDialog;
 
     public Context selfFunctionContext ;
 
@@ -103,8 +107,6 @@ public class selfFunction {
         }
 
         editor = selfFunctionContext.getSharedPreferences("login" , MODE_PRIVATE).edit();
-
-
         sharedPreferences = selfFunctionContext.getSharedPreferences("login" , MODE_PRIVATE);
 
         HandlerThread thread = new HandlerThread(tag);
@@ -112,17 +114,182 @@ public class selfFunction {
         handler = new Handler(thread.getLooper()){
 
             public void  handleMessage(Message msg){
-                Context context = (Context) msg.obj;
+                final Context context = (Context) msg.obj;
+                String what = msg.getData().getString("name");
+                final String data = msg.getData().getString("data");
 
-                final MainActivity mainActivity = (MainActivity) context;
-                mainActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mainActivity.imageButton.setVisibility(View.GONE);
-                        dialog.cancel();
+                try{
+                    switch (what){
+                        default:break;
+                        case "edit/index":{
+                            final MainActivity mainActivity = (MainActivity) context;
+                            mainActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mainActivity.imageButton.setVisibility(View.GONE);
+                                    loadingDialog.cancel();
+
+                                }
+                            });
+                            break;
+                        }
+                        case "index/getMsg":{
+//                        infoPush("验证码")
+
+                            if(data.equals("OK") ){
+                                final loginActivity login = (loginActivity) context;
+                                login.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        login.sign_up1.setVisibility(View.GONE);
+                                        login.sign_up2.setVisibility(View.VISIBLE);
+                                    }
+                                });
+
+
+                            }else{
+                                infoPush(data, selfFunctionContext);
+                            }
+                            loadingDialog.cancel();
+
+                            break;
+                        }
+                        case "index/sign":{
+                            final loginActivity login = (loginActivity) context;
+
+                            if(data.equals("success")){
+                                login.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        login.sign_up2.setVisibility(View.GONE);
+                                        login.sign_up3.setVisibility(View.VISIBLE);
+
+
+                                    }
+                                });
+
+                            }else {
+                                infoPush(data, selfFunctionContext);
+                                login.verificationCodeView.clearInputContent();
+
+                            }
+                            loadingDialog.cancel();
+
+                            break;
+                        }
+                        case "index/signUp":{
+                            final loginActivity login = (loginActivity) context;
+
+                            if(data.equals("dataBaseError")){
+
+                                infoPush(data , context);
+
+                            }else{
+                                login.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        toast("注册成功");
+
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(data);
+                                            String phone = jsonObject.getString("phone");
+                                            String code = jsonObject.getString("code");
+
+                                            editor.putString("phone" , phone );
+                                            editor.putString("code" , code );
+                                            login.userNmaeInput.setText(phone);
+                                            login.codeInput.setText(code);
+                                            editor.apply();
+
+                                            login.signDialog.cancel();
+                                            login.finish();
+                                            return;
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                            infoPush(e , context);
+                                            login.signDialog.cancel();
+
+                                        }
+
+
+
+
+                                    }
+                                });
+                            }
+                            loadingDialog.cancel();
+
+
+                            break;
+                        }
+
+
+                        case "index/login":{
+                            final loginActivity login = (loginActivity) context;
+                            if(!data.equals("failed")){
+
+                                login.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        toast("登录成功");
+
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(data);
+                                            String phone = jsonObject.getString("phone");
+                                            String code = jsonObject.getString("code");
+
+                                            editor.putString("phone" , phone );
+                                            editor.putString("code" , code );
+                                            login.userNmaeInput.setText(phone);
+                                            login.codeInput.setText(code);
+                                            editor.apply();
+
+                                            login.finish();
+                                            return;
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                            infoPush(e , context);
+
+                                        }
+
+
+
+
+                                    }
+                                });
+
+                            }else {
+
+                                login.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+
+
+                                    }
+                                });
+                                infoPush("账号密码错误", context);
+                            }
+
+                            login.recovery();
+
+                            break;
+                        }
+
 
                     }
-                });
+                }catch (Throwable e ){
+                    Log.d(tag , e.toString());
+                    e.printStackTrace();
+                }
+
+
+
+
+
+
 
             }
         };
@@ -254,13 +421,11 @@ public class selfFunction {
         View view1 = View.inflate(context , R.layout.loading , null);
 
         builder.setView(view1);
-        builder.setCancelable(false);
-        dialog = builder.create();
+        loadingDialog = builder.create();
 
 
-
-
-        dialog.show();
+        loadingDialog.setCanceledOnTouchOutside(false);
+        loadingDialog.show();
 
 
     }
@@ -300,6 +465,13 @@ public class selfFunction {
     public boolean infoPush(Object msg){
 
         return infoPush(msg , selfFunctionContext);
+
+    }
+
+    public void toast(Object msg){
+
+        Toast.makeText(selfFunctionContext ,
+                (msg == null) ? "null" : msg.toString() , Toast.LENGTH_LONG ).show();
 
     }
 
