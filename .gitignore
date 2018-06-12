@@ -1,1 +1,3 @@
 phpServer/runtime/*
+client/.idea
+phpServer/.idea

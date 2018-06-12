@@ -1,72 +1,50 @@
 package com.example.test.menu;
 
-import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.net.HttpURLConnection;
-import java.net.NetworkInterface;
-import java.net.URL;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
-
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.MapView;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+
+import java.net.NetworkInterface;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener  {
 
     final public String tag = "MainActivity";
+
 
     private ImageView clickToLogin;
     private AMapLocationClient aMapLocationClient;
     private AMapLocationClientOption aMapLocationClientOption;
+    private selfFunction func;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,28 +52,39 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        func = new selfFunction(MainActivity.this) ;
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-//                infoPush(getAdressMacByInterface());
-                try {
-                    AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
-
-                    testActivity temp = new testActivity();
-
+                String phone = func.sharedPreferences.getString("phone" , "");
+                if(!phone.equals("")){
+                    initCalendarDialog(MainActivity.this);
                     postStructList listData = new postStructList();
-                    listData.add("latitude" , aMapLocation.getLatitude());
-                    listData.add("longitude" , aMapLocation.getLongitude());
+                    listData.add("phone" , phone );
 
-
-                    infoPush(aMapLocation);
-                    temp.post("index/sign" , listData );
-                }catch (Throwable e){
-                    infoPush((e));
+                    func.post("time/getCalendar" , listData  );
+                }else {
+                    func.toast("需要登录");
+                    Intent intent = new Intent(MainActivity.this , loginActivity.class);
+                    startActivity(intent);
                 }
+
+
+
+
+                Date testDate = new Date();
+                testDate.setDate(21);
+
+                calendarDialog.show();
+
+
+
+
                 
             }
         });
@@ -109,19 +98,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//                Intent intent = new Intent(MainActivity.this , testActivity.class);
-//                startActivity(intent);
-//        ImageView imageView = (ImageView) findViewById(R.id.imageView);
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                Intent intent = new Intent(MainActivity.this , testActivity.class);
-////                startActivity(intent);
-//
-//
-//
-//            }
-//        });
+
 
         try {
             clickToLogin = (ImageView) findViewById(R.id.imageView);
@@ -129,7 +106,7 @@ public class MainActivity extends AppCompatActivity
 //
 //            @Override
 //            public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this , testActivity.class);
+//                Intent intent = new Intent(MainActivity.this , loginActivity.class);
 //                startActivity(intent);
 //            }
 //        });
@@ -142,11 +119,10 @@ public class MainActivity extends AppCompatActivity
                 public void onLocationChanged(AMapLocation aMapLocation) {
                     if(aMapLocation != null){
                         if(aMapLocation.getErrorCode() == 0){
-                            infoPush((aMapLocation.getAltitude()));
 
 
                         }else{
-                            infoPush(aMapLocation.getErrorInfo());
+                            func.infoPush(aMapLocation.getErrorInfo() );
                         }
 
 
@@ -158,8 +134,16 @@ public class MainActivity extends AppCompatActivity
             aMapLocationClient.startLocation();
         }catch (Throwable e){
 //            e.printStackTrace();
-            infoPush((e));
+            func.infoPush((e) );
         }
+
+        mapView = (MapView) findViewById(R.id.map);
+        mapView.onCreate(savedInstanceState);
+
+
+
+
+
 
 
 
@@ -223,7 +207,6 @@ public class MainActivity extends AppCompatActivity
 
             return true;
         } else if (id == R.id.fab) {
-            infoPush("sign up");
 
         }
 
@@ -237,18 +220,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            infoPush("test");
+
         } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(this, testActivity.class);
+            Intent intent = new Intent(this, loginActivity.class);
+
+
+
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
-//            locationClient.setLocationOption();
 
 
-//            AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
-//            infoPush(String.valueOf(aMapLocation.getLatitude()));
-//            infoPush(String.valueOf(aMapLocation == null) );
-
+            func.infoPush(func.sharedPreferences.getString("phone" , "null") );
 
 
         } else if (id == R.id.nav_manage) {
@@ -267,63 +249,26 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public boolean infoPush(Object msg){
-        String temp = (msg == null) ? "null" : msg.toString();
-        new  AlertDialog.Builder(this)
-                .setMessage(temp)
-                .show();
-
-
-
-        return true;
-    }
-
-
-
-
-    public boolean test(){
-
-        getApplicationContext().startService(new Intent(this , locationServer.class));
 
 
 
 
 
 
-        return true;
-    }
-    public boolean startAlarm(){
 
-        Intent intent = new Intent("LOCATION_CLOCK");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this , 0  , intent , 0);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        long second = 60*1000;
-        alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP , System.currentTimeMillis() , second , pendingIntent);
-
-
-        return  true;
-    }
-
-    public boolean setTextView( String string ){
-        TextView textView = (TextView) findViewById(R.id.mainText);
-        textView.setText(string);
-
-        return true;
-    }
     private AMapLocationClientOption setDefaultOption(){
         AMapLocationClientOption option = new AMapLocationClientOption();
         option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        option.setGpsFirst(false);
+        option.setGpsFirst(true);
         option.setHttpTimeOut(33333);
         int interval = 2*1000;
         option.setInterval(interval);
         option.setNeedAddress(true);
-        option.setOnceLocation(false);
-        option.setOnceLocationLatest(false);
+        option.setOnceLocation(true);
+        option.setOnceLocationLatest(true);
         AMapLocationClientOption.setLocationProtocol(
                 AMapLocationClientOption.AMapLocationProtocol.HTTP);
-        option.setSensorEnable(false);
+        option.setSensorEnable(true);
         option.setWifiScan(true);
         option.setLocationCacheEnable(true);
         return option;
@@ -333,7 +278,58 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public AlertDialog calendarDialog;
+    private MapView mapView = null;
+    public MaterialCalendarView materialCalendarView ;
+    private CalendarDay calendarDay;
+    public ImageButton imageButton;
 
+
+
+    private void initCalendarDialog(Context context){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        View view = View.inflate(context , R.layout.calender , null);
+
+        materialCalendarView = (MaterialCalendarView) view.findViewById(R.id.mcv);
+        imageButton = (ImageButton) view.findViewById(R.id.sign_submit);
+
+        materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_NONE);
+
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                func.loading();
+
+                AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date current = new Date();
+                String currentStr = simpleDateFormat.format(current);
+
+                postStructList listData = new postStructList();
+                listData.add("lat" , aMapLocation.getLatitude());
+                listData.add("lng" , aMapLocation.getLongitude());
+                listData.add("time" , currentStr);
+                listData.add("phone" , func.sharedPreferences.getString("phone" , "") );
+
+
+                func.post("edit/index" , listData  );
+
+            }
+        });
+
+
+
+        builder.setView(view);
+
+        calendarDialog = builder.create();
+
+
+
+    }
 
 
 

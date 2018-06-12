@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#7adfb8"
     android:id="@+id/login_page"
-    tools:context=".testActivity" >
+    tools:context=".loginActivity" >
 
     <include
         android:id="@+id/main_title"
@@ -52,7 +52,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dip"
-            android:textColor="#ff0000"
+            android:textColor="#adaf0a"
             android:text=""
             android:id="@+id/loginTips"
 
@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="130dip"
             layout="@layout/layout_progress"
-            android:visibility="gone"
+            android:visibility="invisible"
             />
 
         <ImageButton
@@ -83,7 +83,7 @@
             android:gravity="center"
             android:background="#00000000"
             android:src="@drawable/login"
-            android:visibility="gone"
+            android:visibility="invisible"
             />
 
     </RelativeLayout>
@@ -95,7 +95,7 @@
         android:layout_marginBottom="30dip"
         android:text="@string/fogotPassword"
         android:textColor="#00f"
-        android:visibility="gone"
+        android:visibility="invisible"
         />
 
 
