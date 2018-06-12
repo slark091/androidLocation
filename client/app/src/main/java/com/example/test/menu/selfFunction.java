@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,7 +22,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -89,6 +93,8 @@ public class selfFunction {
     public     SharedPreferences sharedPreferences;
     private Transition transition;
 
+    private  boolean judgeSignButton = false;
+
 
 
     private void init(){
@@ -121,16 +127,85 @@ public class selfFunction {
                 try{
                     switch (what){
                         default:break;
-                        case "edit/index":{
+                        case "time/getCalendar":{
                             final MainActivity mainActivity = (MainActivity) context;
+
+                            JSONArray jsonArray = new JSONArray(data);
+//                            jsonArray.get(0);
+                            final int len = jsonArray.length();
+
+                            final Date[] calendarDate = new Date[len];
+                            Date current = new Date();
+                            judgeSignButton = false;
+                            for(int i = 0 ; i < len ; i ++ ){
+                                JSONObject jsonObject = new JSONObject( jsonArray.getString(i));
+                                String time = jsonObject.get("time").toString();
+
+                                SimpleDateFormat simpleDateFormat =
+                                        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                                ParsePosition parsePosition = new ParsePosition(0);
+                                calendarDate[i] = simpleDateFormat.parse(time , parsePosition);
+                                if(isSameDay(current , calendarDate[i])){
+                                    judgeSignButton = true;
+                                }
+
+                            }
+
+
                             mainActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mainActivity.imageButton.setVisibility(View.GONE);
-                                    loadingDialog.cancel();
+                                    for(int i = 0; i < len ; i++){
+                                        mainActivity.materialCalendarView.
+                                                setDateSelected(calendarDate[i] , true);
+                                    }
+                                    if(!judgeSignButton){
+                                        mainActivity.imageButton.setVisibility(View.VISIBLE);
+                                    }
+
+
+
+
+                                    mainActivity.calendarDialog.show();
+//                                    mainActivity.imageButton.setVisibility(View.GONE);
 
                                 }
                             });
+                            break;
+                        }
+                        case "edit/index" :{
+                            final MainActivity mainActivity = (MainActivity) context;
+
+                            if(data.equals("outOfArea")){
+                                mainActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        infoPush("不在规定区域" , context);
+
+                                    }
+                                });
+                            }else {
+                                mainActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        toast("信息已登记");
+                                        SimpleDateFormat simpleDateFormat =
+                                                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                                        ParsePosition parsePosition = new ParsePosition(0);
+                                        Date date= simpleDateFormat.parse(data , parsePosition);
+                                        mainActivity.materialCalendarView.setDateSelected(date , true);
+                                        mainActivity.imageButton.setVisibility(View.INVISIBLE);
+                                    }
+                                });
+                            }
+
+
+
+                            loadingDialog.cancel();
+
+
                             break;
                         }
                         case "index/getMsg":{
@@ -474,5 +549,23 @@ public class selfFunction {
                 (msg == null) ? "null" : msg.toString() , Toast.LENGTH_LONG ).show();
 
     }
+    public void endLoading(){
+        loadingDialog.cancel();
+    }
+
+    public boolean isSameDay(Date date1 , Date date2){
+
+        int year1 = date1.getYear();
+        int year2 = date2.getYear();
+        int month1 = date1.getMonth();
+        int month2 = date2.getMonth();
+        int day1 = date1.getDate();
+        int day2 = date2.getDate();
+
+        return year1 == year2 && month1 == month2 && day1 == day2;
+
+
+    }
+
 
 }

@@ -49,6 +49,7 @@
         android:layout_marginTop="-30dip"
         android:layout_marginBottom="10dip"
         android:layout_centerHorizontal="true"
+        android:visibility="invisible"
         />
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.example.test.menu;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -26,7 +27,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.net.NetworkInterface;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -43,10 +44,7 @@ public class MainActivity extends AppCompatActivity
     private AMapLocationClientOption aMapLocationClientOption;
     private selfFunction func;
 
-    private MapView mapView = null;
-    private MaterialCalendarView materialCalendarView ;
-    private CalendarDay calendarDay;
-    public ImageButton imageButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,48 +61,29 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                String phone = func.sharedPreferences.getString("phone" , "");
+                if(!phone.equals("")){
+                    initCalendarDialog(MainActivity.this);
+                    postStructList listData = new postStructList();
+                    listData.add("phone" , phone );
 
-                View view1 = View.inflate(MainActivity.this , R.layout.calender , null);
+                    func.post("time/getCalendar" , listData  );
+                }else {
+                    func.toast("需要登录");
+                    Intent intent = new Intent(MainActivity.this , loginActivity.class);
+                    startActivity(intent);
+                }
 
-                materialCalendarView = (MaterialCalendarView) view1.findViewById(R.id.mcv);
-                imageButton = (ImageButton) view1.findViewById(R.id.sign_submit);
 
-                materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_NONE);
+
 
                 Date testDate = new Date();
-                testDate.setDate(12);
+                testDate.setDate(21);
 
-                CalendarDay temp =  CalendarDay.from(testDate);
-
-                materialCalendarView.setDateSelected(Calendar.getInstance().getTime() , true);
-                materialCalendarView.setDateSelected(testDate , true);
-
-
-                imageButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        func.loading();
-
-                        AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
-
-
-                        postStructList listData = new postStructList();
-                        listData.add("lat" , aMapLocation.getLatitude());
-                        listData.add("lng" , aMapLocation.getLongitude());
-                        func.post("edit/index" , listData  );
-
-                    }
-                });
+                calendarDialog.show();
 
 
 
-                builder.setView(view1);
-
-                AlertDialog dialog = builder.create();
-
-                dialog.show();
-                dialog.getWindow();
 
                 
             }
@@ -299,7 +278,58 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public AlertDialog calendarDialog;
+    private MapView mapView = null;
+    public MaterialCalendarView materialCalendarView ;
+    private CalendarDay calendarDay;
+    public ImageButton imageButton;
 
+
+
+    private void initCalendarDialog(Context context){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        View view = View.inflate(context , R.layout.calender , null);
+
+        materialCalendarView = (MaterialCalendarView) view.findViewById(R.id.mcv);
+        imageButton = (ImageButton) view.findViewById(R.id.sign_submit);
+
+        materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_NONE);
+
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                func.loading();
+
+                AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date current = new Date();
+                String currentStr = simpleDateFormat.format(current);
+
+                postStructList listData = new postStructList();
+                listData.add("lat" , aMapLocation.getLatitude());
+                listData.add("lng" , aMapLocation.getLongitude());
+                listData.add("time" , currentStr);
+                listData.add("phone" , func.sharedPreferences.getString("phone" , "") );
+
+
+                func.post("edit/index" , listData  );
+
+            }
+        });
+
+
+
+        builder.setView(view);
+
+        calendarDialog = builder.create();
+
+
+
+    }
 
 
 
