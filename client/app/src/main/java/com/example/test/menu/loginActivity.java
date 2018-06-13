@@ -214,7 +214,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
 
         ObjectAnimator animator2 = ObjectAnimator.ofFloat(mInputLayout,
                 "scaleX", 1f, 0.5f);
-        set.setDuration(1000);
+        set.setDuration(200);
         set.setInterpolator(new AccelerateDecelerateInterpolator());
         set.playTogether(animator, animator2);
         set.start();
@@ -297,6 +297,8 @@ public class loginActivity extends Activity implements View.OnClickListener {
                 listData.add("code" , codeInput.getText());
 
 //                handleInfo(listData);
+
+
                 func.post( "index/login" , (listData));
 
 

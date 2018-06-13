@@ -348,7 +348,7 @@ public class selfFunction {
                                 infoPush("账号密码错误", context);
                             }
 
-                            login.recovery();
+//                            login.recovery();
 
                             break;
                         }
@@ -411,13 +411,13 @@ public class selfFunction {
     public String post(final String method  , postStructList list , final Context context ){
 
         final  String info = handleInfo(list);
-//        String serverAddress = "location.unix8.net";
-        String serverAddress = "192.168.1.100";
+        String serverAddress = "location.unix8.net";
+//        String serverAddress = "192.168.1.100";
 
         final String path = "http://" +
                 serverAddress +
-//                "/public/index/" +
-                "/test/phpServer/public/index/" +
+                "/public/index/" +
+//                "/test/phpServer/public/index/" +
                 method +
                 "";
         new Thread() {
@@ -425,7 +425,7 @@ public class selfFunction {
 //                while (true)
                 {
                     try {
-                        Thread.sleep(3000);
+                        Thread.sleep(300);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
