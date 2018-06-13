@@ -1,10 +1,14 @@
 package com.example.test.menu;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -73,7 +77,7 @@ public class MainActivity extends AppCompatActivity
                     Intent intent = new Intent(MainActivity.this , loginActivity.class);
                     startActivity(intent);
                 }
-                
+
                 
             }
         });
@@ -91,6 +95,7 @@ public class MainActivity extends AppCompatActivity
 
         try {
             clickToLogin = (ImageView) findViewById(R.id.imageView);
+
 //        clickToLogin.setOnClickListener(new View.OnClickListener(){
 //
 //            @Override
@@ -99,28 +104,17 @@ public class MainActivity extends AppCompatActivity
 //                startActivity(intent);
 //            }
 //        });
-            aMapLocationClient = new AMapLocationClient(this.getApplicationContext());
-            aMapLocationClientOption = setDefaultOption();
-            aMapLocationClient.setLocationOption(aMapLocationClientOption);
 
-            aMapLocationClient.setLocationListener(new AMapLocationListener() {
-                @Override
-                public void onLocationChanged(AMapLocation aMapLocation) {
-                    if(aMapLocation != null){
-                        if(aMapLocation.getErrorCode() == 0){
+            if((ContextCompat.checkSelfPermission(this ,
+                    (Manifest.permission.ACCESS_COARSE_LOCATION )))!= PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this , new String[]{
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                } , 1);
 
+            }
 
-                        }else{
-                            func.infoPush(aMapLocation.getErrorInfo() );
-                        }
+            initAmapLocation();
 
-
-                    }
-                    aMapLocationClient.stopLocation();
-                }
-            });
-
-            aMapLocationClient.startLocation();
         }catch (Throwable e){
 //            e.printStackTrace();
             func.infoPush((e) );
@@ -245,25 +239,43 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    private AMapLocationClientOption setDefaultOption(){
+    private void initAmapLocation(){
+
+        aMapLocationClient = new AMapLocationClient(this.getApplicationContext());
+
         AMapLocationClientOption option = new AMapLocationClientOption();
+
+        option.setLocationPurpose(AMapLocationClientOption.AMapLocationPurpose.SignIn);
+
         option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        option.setGpsFirst(true);
-        option.setHttpTimeOut(33333);
-        int interval = 2*1000;
-        option.setInterval(interval);
-        option.setNeedAddress(true);
+
         option.setOnceLocation(true);
-        option.setOnceLocationLatest(true);
-        AMapLocationClientOption.setLocationProtocol(
-                AMapLocationClientOption.AMapLocationProtocol.HTTP);
-        option.setSensorEnable(true);
-        option.setWifiScan(true);
-        option.setLocationCacheEnable(true);
-        return option;
+
+        option.setHttpTimeOut(10*1000);
 
 
+        if(null != aMapLocationClient){
+            aMapLocationClient.setLocationOption(option);
+            aMapLocationClient.stopLocation();
+            aMapLocationClient.startLocation();
 
+        }
+        aMapLocationClient.setLocationListener(new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation aMapLocation) {
+                if(aMapLocation != null){
+                    if(aMapLocation.getErrorCode() == 0){
+
+
+                    }else{
+                        func.infoPush(aMapLocation);
+                    }
+
+
+                }
+                aMapLocationClient.stopLocation();
+            }
+        });
     }
 
 
@@ -277,7 +289,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initCalendarDialog(Context context){
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context , R.style.dialog);
 
         View view = View.inflate(context , R.layout.calender , null);
 
@@ -292,20 +304,32 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 func.loading();
 
-                AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
+                try {
+                    AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date current = new Date();
-                String currentStr = simpleDateFormat.format(current);
+                    if(aMapLocation!=null){
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date current = new Date();
+                        String currentStr = simpleDateFormat.format(current);
 
-                postStructList listData = new postStructList();
-                listData.add("lat" , aMapLocation.getLatitude());
-                listData.add("lng" , aMapLocation.getLongitude());
-                listData.add("time" , currentStr);
-                listData.add("phone" , func.sharedPreferences.getString("phone" , "") );
+                        postStructList listData = new postStructList();
+                        listData.add("lat" , aMapLocation.getLatitude());
+                        listData.add("lng" , aMapLocation.getLongitude());
+                        listData.add("time" , currentStr);
+                        listData.add("phone" , func.sharedPreferences.getString("phone" , "") );
 
 
-                func.post("edit/index" , listData  );
+                        func.post("edit/index" , listData  );
+                    }else {
+                        func.infoPush("定位失败,需要定位权限");
+                        func.endLoading();
+                    }
+
+
+                }catch (Throwable e){
+                    func.infoPush(e);
+                }
+
 
             }
         });

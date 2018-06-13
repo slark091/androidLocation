@@ -358,6 +358,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
     public void recovery() {
 
             progress.setVisibility(View.INVISIBLE);
+            mInputLayout.setVisibility(View.VISIBLE);
             mName.setVisibility(View.VISIBLE);
             mPsw.setVisibility(View.VISIBLE);
             mTips.setVisibility(View.VISIBLE);
@@ -373,9 +374,6 @@ public class loginActivity extends Activity implements View.OnClickListener {
             animator2.setInterpolator(new AccelerateDecelerateInterpolator());
             animator2.start();
 
-
-
-//        finish();
     }
 
     //edited by slark091
