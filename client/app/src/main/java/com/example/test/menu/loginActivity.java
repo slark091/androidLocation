@@ -288,6 +288,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
                 mPsw.setVisibility(View.INVISIBLE);
                 mTips.setVisibility(View.INVISIBLE);
                 mBtnLogin.setVisibility(View.INVISIBLE);
+                mInputLayout.setVisibility(View.INVISIBLE);
 
                 inputAnimator(mInputLayout, mWidth, mHeight);
 
@@ -355,22 +356,24 @@ public class loginActivity extends Activity implements View.OnClickListener {
     }
 
     public void recovery() {
-        progress.setVisibility(View.INVISIBLE);
-        mInputLayout.setVisibility(View.VISIBLE);
-        mName.setVisibility(View.VISIBLE);
-        mPsw.setVisibility(View.VISIBLE);
-        mTips.setVisibility(View.VISIBLE);
 
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mInputLayout.getLayoutParams();
-        params.leftMargin = 0;
-        params.rightMargin = 0;
-        mInputLayout.setLayoutParams(params);
+            progress.setVisibility(View.INVISIBLE);
+            mName.setVisibility(View.VISIBLE);
+            mPsw.setVisibility(View.VISIBLE);
+            mTips.setVisibility(View.VISIBLE);
+
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mInputLayout.getLayoutParams();
+            params.leftMargin = 0;
+            params.rightMargin = 0;
+            mInputLayout.setLayoutParams(params);
 
 
-        ObjectAnimator animator2 = ObjectAnimator.ofFloat(mInputLayout, "scaleX", 0.5f,1f );
-        animator2.setDuration(500);
-        animator2.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator2.start();
+            ObjectAnimator animator2 = ObjectAnimator.ofFloat(mInputLayout, "scaleX", 0.5f,1f );
+            animator2.setDuration(500);
+            animator2.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator2.start();
+
+
 
 //        finish();
     }

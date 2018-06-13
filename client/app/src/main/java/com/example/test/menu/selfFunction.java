@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -260,35 +259,23 @@ public class selfFunction {
                                 infoPush(data , context);
 
                             }else{
+                                JSONObject jsonObject = new JSONObject(data);
+                                final String phone = jsonObject.getString("phone");
+                                final String code = jsonObject.getString("code");
+
+                                editor.putString("phone" , phone );
+                                editor.putString("code" , code );
+                                editor.apply();
                                 login.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         toast("注册成功");
-
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(data);
-                                            String phone = jsonObject.getString("phone");
-                                            String code = jsonObject.getString("code");
-
-                                            editor.putString("phone" , phone );
-                                            editor.putString("code" , code );
                                             login.userNmaeInput.setText(phone);
                                             login.codeInput.setText(code);
-                                            editor.apply();
 
                                             login.signDialog.cancel();
                                             login.finish();
                                             return;
-
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                            infoPush(e , context);
-                                            login.signDialog.cancel();
-
-                                        }
-
-
-
 
                                     }
                                 });
@@ -303,53 +290,48 @@ public class selfFunction {
                         case "index/login":{
                             final loginActivity login = (loginActivity) context;
                             if(!data.equals("failed")){
+                                JSONObject jsonObject = new JSONObject(data);
+                                String phone = jsonObject.getString("phone");
+                                String code = jsonObject.getString("code");
 
+                                editor.putString("phone" , phone );
+                                editor.putString("code" , code );
+                                editor.apply();
                                 login.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         toast("登录成功");
 
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(data);
-                                            String phone = jsonObject.getString("phone");
-                                            String code = jsonObject.getString("code");
+                                        login.finish();
 
-                                            editor.putString("phone" , phone );
-                                            editor.putString("code" , code );
-                                            login.userNmaeInput.setText(phone);
-                                            login.codeInput.setText(code);
-                                            editor.apply();
-
-                                            login.finish();
+//                                            TimerTask timerTask = new TimerTask() {
+//                                                @Override
+//                                                public void run() {
+//                                                    try {
+//
+//                                                    }catch (Throwable e){
+//                                                        toast(e);
+//                                                    }
+//
+//                                                }
+//                                            };
+//                                            Timer timer = new Timer();
+//                                            timer.schedule(timerTask , 800);
                                             return;
-
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                            infoPush(e , context);
-
-                                        }
-
-
-
 
                                     }
                                 });
 
                             }else {
-
-                                login.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-
-
-                                    }
-                                });
                                 infoPush("账号密码错误", context);
                             }
 
-//                            login.recovery();
-
+                            login.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    login.recovery();
+                                }
+                            });
                             break;
                         }
 
@@ -424,11 +406,7 @@ public class selfFunction {
             public void run() {
 //                while (true)
                 {
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+
                     try {
                         URL url = new URL(path);
                         HttpURLConnection conn = (HttpURLConnection) url

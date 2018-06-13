@@ -73,18 +73,7 @@ public class MainActivity extends AppCompatActivity
                     Intent intent = new Intent(MainActivity.this , loginActivity.class);
                     startActivity(intent);
                 }
-
-
-
-
-                Date testDate = new Date();
-                testDate.setDate(21);
-
-                calendarDialog.show();
-
-
-
-
+                
                 
             }
         });
