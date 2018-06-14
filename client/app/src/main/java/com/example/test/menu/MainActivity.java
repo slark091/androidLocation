@@ -1,5 +1,6 @@
 package com.example.test.menu;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -261,11 +262,18 @@ public class MainActivity extends AppCompatActivity
     public  void onRequestPermissionsResult(int requestCode ,
                                             @NonNull String[] permissions , @NonNull int[] grantResults){
 
-        if(grantResults[0] == 1){
-            initAmapLocation();
-        }else{
-            func.infoPush("权限已拒绝 , 相关功能会出现故障");
+
+        int len = permissions.length;
+        for(int i = 0 ; i < len ; i ++){
+            if(permissions[i].equals(Manifest.permission.ACCESS_COARSE_LOCATION)){
+                if(grantResults[i] == 0){
+                    initAmapLocation();
+                    return;
+                }
+            }
         }
+
+            func.infoPush("权限已拒绝 , 相关功能会出现故障");
 
     }
 
