@@ -507,7 +507,8 @@ public class selfFunction {
     public boolean infoPush(Object msg , Context context   ){
 
         String temp = (msg == null) ? "null" : msg.toString();
-        new  AlertDialog.Builder(context)
+        new  AlertDialog.Builder(context , R.style.infoPush)
+
                 .setMessage(temp)
                 .show();
 

@@ -1,10 +1,12 @@
 package com.example.test.menu;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -26,7 +28,12 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
@@ -35,6 +42,8 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 
 
 public class MainActivity extends AppCompatActivity
@@ -104,16 +113,22 @@ public class MainActivity extends AppCompatActivity
 //                startActivity(intent);
 //            }
 //        });
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                if((ContextCompat.checkSelfPermission(this ,
+                        (ACCESS_COARSE_LOCATION )))!= PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(this , new String[]{
+                            ACCESS_COARSE_LOCATION
+                    } , 1);
 
-            if((ContextCompat.checkSelfPermission(this ,
-                    (Manifest.permission.ACCESS_COARSE_LOCATION )))!= PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(this , new String[]{
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                } , 1);
-
+                }else{
+                    initAmapLocation();
+                }
+            }else{
+                initAmapLocation();
             }
 
-            initAmapLocation();
+
+
 
         }catch (Throwable e){
 //            e.printStackTrace();
@@ -122,6 +137,16 @@ public class MainActivity extends AppCompatActivity
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
+        AMap aMap = mapView.getMap();
+
+        Marker marker = aMap.addMarker(new MarkerOptions()
+            .position(new LatLng(31.5315 , 104.70421))
+            .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+            .decodeResource(getResources() , R.drawable.eye_open)))
+            .draggable(true)
+        );
+
+
 
 
 
@@ -222,7 +247,7 @@ public class MainActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_send) {
-
+            func.infoPush("nav_send");
 
         }else if(id == R.id.drawer_layout){
 
@@ -233,7 +258,17 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public  void onRequestPermissionsResult(int requestCode ,
+                                            @NonNull String[] permissions , @NonNull int[] grantResults){
 
+        if(grantResults[0] == 1){
+            initAmapLocation();
+        }else{
+            func.infoPush("权限已拒绝 , 相关功能会出现故障");
+        }
+
+    }
 
 
 
@@ -305,23 +340,21 @@ public class MainActivity extends AppCompatActivity
                 func.loading();
 
                 try {
-                    AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
+                    if(aMapLocationClient != null){
+                        AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
+                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            Date current = new Date();
+                            String currentStr = simpleDateFormat.format(current);
 
-                    if(aMapLocation!=null){
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        Date current = new Date();
-                        String currentStr = simpleDateFormat.format(current);
-
-                        postStructList listData = new postStructList();
-                        listData.add("lat" , aMapLocation.getLatitude());
-                        listData.add("lng" , aMapLocation.getLongitude());
-                        listData.add("time" , currentStr);
-                        listData.add("phone" , func.sharedPreferences.getString("phone" , "") );
-
-
-                        func.post("edit/index" , listData  );
+                            postStructList listData = new postStructList();
+                            listData.add("lat" , aMapLocation.getLatitude());
+                            listData.add("lng" , aMapLocation.getLongitude());
+                            listData.add("time" , currentStr);
+                            listData.add("phone" , func.sharedPreferences.getString("phone" , "") );
+                        
+                            func.post("edit/index" , listData  );
                     }else {
-                        func.infoPush("定位失败,需要定位权限");
+                        func.infoPush("定位失败,请排查权限或网络");
                         func.endLoading();
                     }
 
@@ -343,7 +376,6 @@ public class MainActivity extends AppCompatActivity
 
 
     }
-
 
 
 }
