@@ -2,6 +2,8 @@ package com.example.test.menu;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -391,6 +393,16 @@ public class selfFunction {
 
 
     public String post(final String method  , postStructList list , final Context context ){
+
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if(networkInfo == null){
+            infoPush("没有网络连接");
+            return  "noLine";
+        }
+
 
         final  String info = handleInfo(list);
         String serverAddress = "location.unix8.net";

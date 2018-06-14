@@ -351,10 +351,10 @@ public class MainActivity extends AppCompatActivity
                             listData.add("lng" , aMapLocation.getLongitude());
                             listData.add("time" , currentStr);
                             listData.add("phone" , func.sharedPreferences.getString("phone" , "") );
-                        
+
                             func.post("edit/index" , listData  );
                     }else {
-                        func.infoPush("定位失败,请排查权限或网络");
+                        func.infoPush("定位失败,请检查权限");
                         func.endLoading();
                     }
 
