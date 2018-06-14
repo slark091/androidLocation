@@ -3,7 +3,6 @@ package com.example.test.menu;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,10 +29,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.Marker;
-import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.UiSettings;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
@@ -139,15 +135,18 @@ public class MainActivity extends AppCompatActivity
         mapView.onCreate(savedInstanceState);
         AMap aMap = mapView.getMap();
 
-        Marker marker = aMap.addMarker(new MarkerOptions()
-            .position(new LatLng(31.5315 , 104.70421))
-            .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-            .decodeResource(getResources() , R.drawable.eye_open)))
-            .draggable(true)
-        );
-
-
-
+//        Marker marker = aMap.addMarker(new MarkerOptions()
+//            .position(new LatLng(31.5315 , 104.70421))
+//            .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+//            .decodeResource(getResources() , R.drawable.sign_submit)))
+//            .draggable(false)
+//        );
+        aMap.setMyLocationEnabled(true);
+        aMap.getMyLocation();
+//        aMap.setMyLocationEnabled(false);
+        UiSettings uiSettings = aMap.getUiSettings();
+        uiSettings.setMyLocationButtonEnabled(true);
+        uiSettings.setZoomControlsEnabled(false);
 
 
 
@@ -230,15 +229,15 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
 
         } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(this, loginActivity.class);
-
-
-
-            startActivity(intent);
+//            Intent intent = new Intent(this, loginActivity.class);
+//
+//
+//
+//            startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
 
 
-            func.infoPush(func.sharedPreferences.getString("phone" , "null") );
+//            func.infoPush(func.sharedPreferences.getString("phone" , "null") );
 
 
         } else if (id == R.id.nav_manage) {
