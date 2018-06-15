@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -40,6 +39,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 
 
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     final public String tag = "MainActivity";
 
 
-    private ImageView clickToLogin;
+    private CircleImageView circleImageView;
     private AMapLocationClient aMapLocationClient;
     private AMapLocationClientOption aMapLocationClientOption;
     private selfFunction func;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -100,16 +102,19 @@ public class MainActivity extends AppCompatActivity
 
 
         try {
-            clickToLogin = (ImageView) findViewById(R.id.imageView);
+            View drawerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+            circleImageView = (CircleImageView) drawerView.findViewById(R.id.circleImageView);
+            circleImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    func.infoPush("clickToLogin");
+                }
+            });
 
-//        clickToLogin.setOnClickListener(new View.OnClickListener(){
-//
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this , loginActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+
+
+
+
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 if((ContextCompat.checkSelfPermission(this ,
                         (ACCESS_COARSE_LOCATION )))!= PackageManager.PERMISSION_GRANTED){
@@ -158,6 +163,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -203,6 +209,11 @@ public class MainActivity extends AppCompatActivity
         return null;
     }
 
+
+
+
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -225,6 +236,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
+
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
@@ -257,6 +270,9 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
 
     @Override
     public  void onRequestPermissionsResult(int requestCode ,
