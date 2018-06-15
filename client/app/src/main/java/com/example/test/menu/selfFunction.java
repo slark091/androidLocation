@@ -1,5 +1,6 @@
 package com.example.test.menu;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -122,16 +124,26 @@ public class selfFunction {
 
             public void  handleMessage(Message msg){
                 final Context context = (Context) msg.obj;
-                String what = msg.getData().getString("name");
+                final String what = msg.getData().getString("name");
                 final String data = msg.getData().getString("data");
-
+                Activity activity = (Activity)context;
                 try{
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+
                     switch (what){
                         default:break;
                         case "time/getCalendar":{
                             final MainActivity mainActivity = (MainActivity) context;
 
-                            JSONArray jsonArray = new JSONArray(data);
+                            JSONArray jsonArray = null;
+                            try {
+                                jsonArray = new JSONArray(data);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 //                            jsonArray.get(0);
                             final int len = jsonArray.length();
 
@@ -139,8 +151,16 @@ public class selfFunction {
                             Date current = new Date();
                             judgeSignButton = false;
                             for(int i = 0 ; i < len ; i ++ ){
-                                JSONObject jsonObject = new JSONObject( jsonArray.getString(i));
-                                String time = jsonObject.get("time").toString();
+                                JSONObject jsonObject = null;
+                                String time = null;
+
+                                try {
+                                    jsonObject = new JSONObject( jsonArray.getString(i));
+                                    time = jsonObject.get("time").toString();
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
                                 SimpleDateFormat simpleDateFormat =
                                         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -154,9 +174,6 @@ public class selfFunction {
                             }
 
 
-                            mainActivity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
                                     for(int i = 0; i < len ; i++){
                                         mainActivity.materialCalendarView.
                                                 setDateSelected(calendarDate[i] , true);
@@ -171,25 +188,15 @@ public class selfFunction {
                                     mainActivity.calendarDialog.show();
 //                                    mainActivity.imageButton.setVisibility(View.GONE);
 
-                                }
-                            });
                             break;
                         }
                         case "edit/index" :{
                             final MainActivity mainActivity = (MainActivity) context;
 
                             if(data.equals("outOfArea")){
-                                mainActivity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
                                         infoPush("不在规定区域" , context);
 
-                                    }
-                                });
                             }else {
-                                mainActivity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
                                         toast("信息已登记");
                                         SimpleDateFormat simpleDateFormat =
                                                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -198,8 +205,6 @@ public class selfFunction {
                                         Date date= simpleDateFormat.parse(data , parsePosition);
                                         mainActivity.materialCalendarView.setDateSelected(date , true);
                                         mainActivity.imageButton.setVisibility(View.INVISIBLE);
-                                    }
-                                });
                             }
 
 
@@ -214,17 +219,9 @@ public class selfFunction {
 
                             if(data.equals("OK") ){
                                 final loginActivity login = (loginActivity) context;
-                                login.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
                                         toast("短信已发送");
                                         login.sign_up1.setVisibility(View.GONE);
                                         login.sign_up2.setVisibility(View.VISIBLE);
-                                    }
-                                });
-
-
                             }else{
                                 infoPush(data, selfFunctionContext);
                             }
@@ -236,25 +233,15 @@ public class selfFunction {
                             final loginActivity login = (loginActivity) context;
 
                             if(data.equals("success")){
-                                login.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
                                         login.sign_up2.setVisibility(View.GONE);
                                         login.sign_up3.setVisibility(View.VISIBLE);
 
 
-                                    }
-                                });
 
                             }else {
-                                login.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
                                         login.verificationCodeView.clearInputContent();
                                         infoPush(data, selfFunctionContext);
 
-                                    }
-                                });
 
 
 
@@ -271,16 +258,24 @@ public class selfFunction {
                                 infoPush(data , context);
 
                             }else{
-                                JSONObject jsonObject = new JSONObject(data);
-                                final String phone = jsonObject.getString("phone");
-                                final String code = jsonObject.getString("code");
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(data);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                String phone = "" , code = "";
+
+                                try {
+                                    phone = jsonObject.getString("phone");
+                                    code = jsonObject.getString("code");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
                                 editor.putString("phone" , phone );
                                 editor.putString("code" , code );
                                 editor.apply();
-                                login.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
                                         toast("注册成功");
                                             login.userNmaeInput.setText(phone);
                                             login.codeInput.setText(code);
@@ -289,8 +284,6 @@ public class selfFunction {
                                             login.finish();
                                             return;
 
-                                    }
-                                });
                             }
                             loadingDialog.cancel();
 
@@ -302,16 +295,23 @@ public class selfFunction {
                         case "index/login":{
                             final loginActivity login = (loginActivity) context;
                             if(!data.equals("failed")){
-                                JSONObject jsonObject = new JSONObject(data);
-                                String phone = jsonObject.getString("phone");
-                                String code = jsonObject.getString("code");
+                                JSONObject jsonObject = null;
+                                String phone = null;
+                                String code = null;
+
+                                try {
+                                    jsonObject = new JSONObject(data);
+                                    phone = jsonObject.getString("phone");
+                                    code = jsonObject.getString("code");
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
 
                                 editor.putString("phone" , phone );
                                 editor.putString("code" , code );
                                 editor.apply();
-                                login.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
                                         toast("登录成功");
 
                                         login.finish();
@@ -331,24 +331,18 @@ public class selfFunction {
 //                                            timer.schedule(timerTask , 800);
                                             return;
 
-                                    }
-                                });
 
                             }else {
                                 infoPush("账号密码错误", context);
                             }
-
-                            login.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
                                     login.recovery();
-                                }
-                            });
                             break;
                         }
 
 
                     }
+                        }
+                    });
                 }catch (Throwable e ){
                     Log.d(tag , e.toString());
                     e.printStackTrace();
