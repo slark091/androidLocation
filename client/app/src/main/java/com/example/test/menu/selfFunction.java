@@ -217,6 +217,8 @@ public class selfFunction {
                                 login.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+
+                                        toast("短信已发送");
                                         login.sign_up1.setVisibility(View.GONE);
                                         login.sign_up2.setVisibility(View.VISIBLE);
                                     }
@@ -245,8 +247,16 @@ public class selfFunction {
                                 });
 
                             }else {
-                                infoPush(data, selfFunctionContext);
-                                login.verificationCodeView.clearInputContent();
+                                login.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        login.verificationCodeView.clearInputContent();
+                                        infoPush(data, selfFunctionContext);
+
+                                    }
+                                });
+
+
 
                             }
                             loadingDialog.cancel();
@@ -402,18 +412,8 @@ public class selfFunction {
             infoPush("没有网络连接");
             return  "noLine";
         }
-
-
         final  String info = handleInfo(list);
-        String serverAddress = "location.unix8.net";
-//        String serverAddress = "192.168.1.100";
-
-        final String path = "http://" +
-                serverAddress +
-                "/public/index/" +
-//                "/test/phpServer/public/index/" +
-                method +
-                "";
+        final String path = context.getString(R.string.postTarget) + method;
         new Thread() {
             public void run() {
 //                while (true)
@@ -556,6 +556,13 @@ public class selfFunction {
         return year1 == year2 && month1 == month2 && day1 == day2;
 
 
+    }
+
+    public boolean isSignUp(){
+
+
+
+        return false;
     }
 
 
