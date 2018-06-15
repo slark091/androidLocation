@@ -8,7 +8,7 @@
 
     <string name="test">test</string>
 
-    <string name="defaultNotLogin">please login in</string>
+    <string name="defaultNotLogin">Default String</string>
     <!--<string name="defaultSign"></string>-->
 
     <string name="buttonName">click</string>

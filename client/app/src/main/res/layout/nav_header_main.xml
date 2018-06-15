@@ -25,9 +25,13 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:paddingTop="@dimen/nav_header_vertical_spacing" app:srcCompat="@drawable/banana" />-->
 
-    <!--<TextView android:layout_width="match_parent" android:layout_height="wrap_content"-->
-        <!--android:paddingTop="@dimen/nav_header_vertical_spacing" android:text="@string/defaultNotLogin"-->
-        <!--android:textAppearance="@style/TextAppearance.AppCompat.Body1" />-->
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:paddingTop="@dimen/nav_header_vertical_spacing" android:text="@string/defaultNotLogin"
+        android:textColor="#9edf7152"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <!--<TextView android:id="@+id/textView" android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content" android:text="@string/defaultNotLogin" />-->
