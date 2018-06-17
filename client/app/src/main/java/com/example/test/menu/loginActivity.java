@@ -214,7 +214,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
 
         ObjectAnimator animator2 = ObjectAnimator.ofFloat(mInputLayout,
                 "scaleX", 1f, 0.5f);
-        set.setDuration(1000);
+        set.setDuration(200);
         set.setInterpolator(new AccelerateDecelerateInterpolator());
         set.playTogether(animator, animator2);
         set.start();
@@ -288,6 +288,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
                 mPsw.setVisibility(View.INVISIBLE);
                 mTips.setVisibility(View.INVISIBLE);
                 mBtnLogin.setVisibility(View.INVISIBLE);
+                mInputLayout.setVisibility(View.INVISIBLE);
 
                 inputAnimator(mInputLayout, mWidth, mHeight);
 
@@ -295,8 +296,12 @@ public class loginActivity extends Activity implements View.OnClickListener {
                 postStructList listData = new postStructList();
                 listData.add("phone" , userNmaeInput.getText());
                 listData.add("code" , codeInput.getText());
+                listData.add("mac" , func.getAdressMacByInterface());
+                listData.setLoginJudge(false);
 
 //                handleInfo(listData);
+
+
                 func.post( "index/login" , (listData));
 
 
@@ -353,24 +358,24 @@ public class loginActivity extends Activity implements View.OnClickListener {
     }
 
     public void recovery() {
-        progress.setVisibility(View.INVISIBLE);
-        mInputLayout.setVisibility(View.VISIBLE);
-        mName.setVisibility(View.VISIBLE);
-        mPsw.setVisibility(View.VISIBLE);
-        mTips.setVisibility(View.VISIBLE);
 
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mInputLayout.getLayoutParams();
-        params.leftMargin = 0;
-        params.rightMargin = 0;
-        mInputLayout.setLayoutParams(params);
+            progress.setVisibility(View.INVISIBLE);
+            mInputLayout.setVisibility(View.VISIBLE);
+            mName.setVisibility(View.VISIBLE);
+            mPsw.setVisibility(View.VISIBLE);
+            mTips.setVisibility(View.VISIBLE);
+
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mInputLayout.getLayoutParams();
+            params.leftMargin = 0;
+            params.rightMargin = 0;
+            mInputLayout.setLayoutParams(params);
 
 
-        ObjectAnimator animator2 = ObjectAnimator.ofFloat(mInputLayout, "scaleX", 0.5f,1f );
-        animator2.setDuration(500);
-        animator2.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator2.start();
+            ObjectAnimator animator2 = ObjectAnimator.ofFloat(mInputLayout, "scaleX", 0.5f,1f );
+            animator2.setDuration(500);
+            animator2.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator2.start();
 
-//        finish();
     }
 
     //edited by slark091
@@ -454,6 +459,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
                 func.loading();
                 postStructList listData = new postStructList();
                 listData.add("phone" , phone.getText().toString());
+                listData.setLoginJudge(false);
                 func.post("index/getMsg" , listData );
 
             }
@@ -466,6 +472,9 @@ public class loginActivity extends Activity implements View.OnClickListener {
                 postStructList listData = new postStructList();
                 listData.add("phone" , phone.getText().toString());
                 listData.add("code" , code.getText().toString());
+                listData.add("mac" , func.getAdressMacByInterface() );
+                listData.setLoginJudge(false);
+
                 func.post("index/signUp" , listData );
             }
         });
@@ -485,6 +494,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
                     postStructList listData = new postStructList();
                     listData.add("phone" , phone.getText().toString());
                     listData.add("verifyCode" , temp);
+                    listData.setLoginJudge(false);
 
                     func.post("index/sign" , listData);
 

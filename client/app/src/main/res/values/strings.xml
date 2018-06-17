@@ -1,14 +1,15 @@
 <resources>
-    <string name="app_name">menu</string>
+    <string name="app_name">freedom</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">设置</string>
 
-    <string name="test">test</string>
+    <!--<string name="postTarget">http://location.unix8.net/public/index/</string>-->
+    <string name="postTarget">http://192.168.1.100/test/phpServer/public/index/</string>
 
-    <string name="defaultNotLogin">please login in</string>
+    <string name="defaultNotLogin">Default String</string>
     <!--<string name="defaultSign"></string>-->
 
     <string name="buttonName">click</string>

@@ -1,11 +1,14 @@
 package com.example.test.menu;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.transition.Transition;
@@ -19,12 +22,14 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.NetworkInterface;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -42,9 +47,8 @@ import static android.content.Context.MODE_PRIVATE;
 class postStructList{
     private List<postStruct> dataList = new ArrayList<>() ;
     private postStruct postItem;
+    private boolean loginJudge = true;
     postStructList(){
-
-
 
     }
     public void add(String name , Object value ){
@@ -57,7 +61,12 @@ class postStructList{
     public List<postStruct> getDataList(){
         return  dataList;
     }
-
+    public void setLoginJudge(boolean value){
+        loginJudge = value;
+    }
+    public boolean getLoginJudge(){
+        return loginJudge;
+    }
 
 }
 
@@ -99,19 +108,6 @@ public class selfFunction {
 
     private void init(){
 
-
-
-
-
-
-
-        try {
-            ;
-        }catch (Throwable e ){
-
-            Log.d(tag , e.toString());
-        }
-
         editor = selfFunctionContext.getSharedPreferences("login" , MODE_PRIVATE).edit();
         sharedPreferences = selfFunctionContext.getSharedPreferences("login" , MODE_PRIVATE);
 
@@ -121,16 +117,62 @@ public class selfFunction {
 
             public void  handleMessage(Message msg){
                 final Context context = (Context) msg.obj;
-                String what = msg.getData().getString("name");
+                final String what = msg.getData().getString("name");
                 final String data = msg.getData().getString("data");
-
+                Activity activity = (Activity)context;
                 try{
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                    if(data.contains("loginJudge/")){
+                        String judge = data.substring(11);
+                        switch (judge){
+                            default:break;
+
+                            case  "findError":{
+                                toast("账号异常,请重新注册");
+                                break;
+                            }
+                            case  "codeError":{
+                                toast("密码已修改,请重新登录");
+                                break;
+                            }
+                            case  "macError":{
+                                toast("账号物理地址异常,请重新登录");
+                                break;
+                            }
+                            case  "statusError":{
+                                toast("账号已登出,请重新登录");
+                                break;
+                            }
+                            case  "timeOut":{
+                                toast("太久没有登录,请重新登录");
+                                break;
+                            }
+                        }
+                        Intent intent = new Intent(context , loginActivity.class);
+                        context.startActivity(intent);
+
+                        return;
+
+                    }
+
+
+
+
                     switch (what){
-                        default:break;
+                        default:{
+                            break;
+                        }
                         case "time/getCalendar":{
                             final MainActivity mainActivity = (MainActivity) context;
 
-                            JSONArray jsonArray = new JSONArray(data);
+                            JSONArray jsonArray = null;
+                            try {
+                                jsonArray = new JSONArray(data);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 //                            jsonArray.get(0);
                             final int len = jsonArray.length();
 
@@ -138,8 +180,16 @@ public class selfFunction {
                             Date current = new Date();
                             judgeSignButton = false;
                             for(int i = 0 ; i < len ; i ++ ){
-                                JSONObject jsonObject = new JSONObject( jsonArray.getString(i));
-                                String time = jsonObject.get("time").toString();
+                                JSONObject jsonObject = null;
+                                String time = null;
+
+                                try {
+                                    jsonObject = new JSONObject( jsonArray.getString(i));
+                                    time = jsonObject.get("time").toString();
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
                                 SimpleDateFormat simpleDateFormat =
                                         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -153,9 +203,6 @@ public class selfFunction {
                             }
 
 
-                            mainActivity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
                                     for(int i = 0; i < len ; i++){
                                         mainActivity.materialCalendarView.
                                                 setDateSelected(calendarDate[i] , true);
@@ -170,25 +217,15 @@ public class selfFunction {
                                     mainActivity.calendarDialog.show();
 //                                    mainActivity.imageButton.setVisibility(View.GONE);
 
-                                }
-                            });
                             break;
                         }
                         case "edit/index" :{
                             final MainActivity mainActivity = (MainActivity) context;
 
                             if(data.equals("outOfArea")){
-                                mainActivity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
                                         infoPush("不在规定区域" , context);
 
-                                    }
-                                });
                             }else {
-                                mainActivity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
                                         toast("信息已登记");
                                         SimpleDateFormat simpleDateFormat =
                                                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -197,8 +234,6 @@ public class selfFunction {
                                         Date date= simpleDateFormat.parse(data , parsePosition);
                                         mainActivity.materialCalendarView.setDateSelected(date , true);
                                         mainActivity.imageButton.setVisibility(View.INVISIBLE);
-                                    }
-                                });
                             }
 
 
@@ -213,15 +248,9 @@ public class selfFunction {
 
                             if(data.equals("OK") ){
                                 final loginActivity login = (loginActivity) context;
-                                login.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
+                                        toast("短信已发送");
                                         login.sign_up1.setVisibility(View.GONE);
                                         login.sign_up2.setVisibility(View.VISIBLE);
-                                    }
-                                });
-
-
                             }else{
                                 infoPush(data, selfFunctionContext);
                             }
@@ -233,19 +262,17 @@ public class selfFunction {
                             final loginActivity login = (loginActivity) context;
 
                             if(data.equals("success")){
-                                login.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
                                         login.sign_up2.setVisibility(View.GONE);
                                         login.sign_up3.setVisibility(View.VISIBLE);
 
 
-                                    }
-                                });
 
                             }else {
-                                infoPush(data, selfFunctionContext);
-                                login.verificationCodeView.clearInputContent();
+                                        login.verificationCodeView.clearInputContent();
+                                        infoPush(data, selfFunctionContext);
+
+
+
 
                             }
                             loadingDialog.cancel();
@@ -260,38 +287,32 @@ public class selfFunction {
                                 infoPush(data , context);
 
                             }else{
-                                login.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(data);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                String phone = "" , code = "";
+
+                                try {
+                                    phone = jsonObject.getString("phone");
+                                    code = jsonObject.getString("code");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                editor.putString("phone" , phone );
+                                editor.putString("code" , code );
+                                editor.apply();
                                         toast("注册成功");
-
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(data);
-                                            String phone = jsonObject.getString("phone");
-                                            String code = jsonObject.getString("code");
-
-                                            editor.putString("phone" , phone );
-                                            editor.putString("code" , code );
                                             login.userNmaeInput.setText(phone);
                                             login.codeInput.setText(code);
-                                            editor.apply();
 
                                             login.signDialog.cancel();
                                             login.finish();
                                             return;
 
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                            infoPush(e , context);
-                                            login.signDialog.cancel();
-
-                                        }
-
-
-
-
-                                    }
-                                });
                             }
                             loadingDialog.cancel();
 
@@ -303,58 +324,54 @@ public class selfFunction {
                         case "index/login":{
                             final loginActivity login = (loginActivity) context;
                             if(!data.equals("failed")){
+                                JSONObject jsonObject = null;
+                                String phone = null;
+                                String code = null;
 
-                                login.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
+                                try {
+                                    jsonObject = new JSONObject(data);
+                                    phone = jsonObject.getString("phone");
+                                    code = jsonObject.getString("code");
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+
+                                editor.putString("phone" , phone );
+                                editor.putString("code" , code );
+                                editor.apply();
                                         toast("登录成功");
 
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(data);
-                                            String phone = jsonObject.getString("phone");
-                                            String code = jsonObject.getString("code");
+                                        login.finish();
 
-                                            editor.putString("phone" , phone );
-                                            editor.putString("code" , code );
-                                            login.userNmaeInput.setText(phone);
-                                            login.codeInput.setText(code);
-                                            editor.apply();
-
-                                            login.finish();
+//                                            TimerTask timerTask = new TimerTask() {
+//                                                @Override
+//                                                public void run() {
+//                                                    try {
+//
+//                                                    }catch (Throwable e){
+//                                                        toast(e);
+//                                                    }
+//
+//                                                }
+//                                            };
+//                                            Timer timer = new Timer();
+//                                            timer.schedule(timerTask , 800);
                                             return;
 
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                            infoPush(e , context);
-
-                                        }
-
-
-
-
-                                    }
-                                });
 
                             }else {
-
-                                login.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-
-
-                                    }
-                                });
                                 infoPush("账号密码错误", context);
                             }
-
-                            login.recovery();
-
+                                    login.recovery();
                             break;
                         }
 
 
                     }
+                        }
+                    });
                 }catch (Throwable e ){
                     Log.d(tag , e.toString());
                     e.printStackTrace();
@@ -372,7 +389,7 @@ public class selfFunction {
 
     //init selfFunction
 
-    public static String md5(String string) {
+    public String md5(String string) {
         string += "test";
 
         MessageDigest md5 = null;
@@ -394,41 +411,25 @@ public class selfFunction {
         return "error";
     }
 
-    class  selfFunctionThread extends Thread{
-        private Looper looper;
-        public  void  run(){
-            Looper.prepare();
-            looper = Looper.myLooper();
-            Looper.loop();
+
+    public void post(final String method  , postStructList list , final Context context ){
+
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if(networkInfo == null){
+            infoPush("没有网络连接");
+            return ;
         }
 
-    }
-
-
-
-
-
-    public String post(final String method  , postStructList list , final Context context ){
-
         final  String info = handleInfo(list);
-//        String serverAddress = "location.unix8.net";
-        String serverAddress = "192.168.1.100";
-
-        final String path = "http://" +
-                serverAddress +
-//                "/public/index/" +
-                "/test/phpServer/public/index/" +
-                method +
-                "";
+        final String path = context.getString(R.string.postTarget) + method;
         new Thread() {
             public void run() {
 //                while (true)
                 {
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+
                     try {
                         URL url = new URL(path);
                         HttpURLConnection conn = (HttpURLConnection) url
@@ -481,12 +482,10 @@ public class selfFunction {
 
             }
         }.start();
-        return "test";
     }
 
-    public String post(final  String method , postStructList list){
-
-        return post(method , list  , selfFunctionContext);
+    public void post(final  String method , postStructList list){
+        post(method , list  , selfFunctionContext);
     }
 
     public void  loading(Context context){
@@ -509,7 +508,15 @@ public class selfFunction {
     }
 
     public String handleInfo(postStructList list){
+
+
+        if(list.getLoginJudge()){
+            list.add("phone" , sharedPreferences.getString("phone" , "") );
+            list.add("code" , sharedPreferences.getString("code" , "") );
+            list.add("mac"  , getAdressMacByInterface() );
+        }
         List<postStruct> infoArray = list.getDataList();
+
         String info = "";
 
         for(int i = 0 ; i < infoArray.size() ; i++){
@@ -529,7 +536,8 @@ public class selfFunction {
     public boolean infoPush(Object msg , Context context   ){
 
         String temp = (msg == null) ? "null" : msg.toString();
-        new  AlertDialog.Builder(context)
+        new  AlertDialog.Builder(context , R.style.infoPush)
+
                 .setMessage(temp)
                 .show();
 
@@ -567,5 +575,33 @@ public class selfFunction {
 
     }
 
+    public String getAdressMacByInterface() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (nif.getName().equalsIgnoreCase("wlan0")) {
+                    byte[] macBytes = nif.getHardwareAddress();
+                    if (macBytes == null) {
+                        return "";
+                    }
+
+                    StringBuilder res1 = new StringBuilder();
+                    for (byte b : macBytes) {
+                        res1.append(String.format("%02X:", b));
+                    }
+
+                    if (res1.length() > 0) {
+                        res1.deleteCharAt(res1.length() - 1);
+                    }
+                    return res1.toString();
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e("MobileAcces", "Erreur lecture propriete Adresse MAC ");
+
+        }
+        return null;
+    }
 
 }

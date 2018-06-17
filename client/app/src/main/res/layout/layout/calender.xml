@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#abcd12"
+    android:background="@drawable/dialog"
     tools:context=".MainActivity"
 
 
@@ -27,7 +27,7 @@
                 android:id="@+id/mcv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:mcv_selectionColor="#00f"
+                app:mcv_selectionColor="#7c9e71cd"
 
 
                 >

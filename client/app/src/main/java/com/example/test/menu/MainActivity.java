@@ -1,36 +1,42 @@
 package com.example.test.menu;
 
+import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.UiSettings;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
-import java.net.NetworkInterface;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 
 
 public class MainActivity extends AppCompatActivity
@@ -39,7 +45,7 @@ public class MainActivity extends AppCompatActivity
     final public String tag = "MainActivity";
 
 
-    private ImageView clickToLogin;
+    private CircleImageView circleImageView;
     private AMapLocationClient aMapLocationClient;
     private AMapLocationClientOption aMapLocationClientOption;
     private selfFunction func;
@@ -48,6 +54,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -62,28 +69,19 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
 
                 String phone = func.sharedPreferences.getString("phone" , "");
-                if(!phone.equals("")){
+//                if(!phone.equals(""))
+                {
                     initCalendarDialog(MainActivity.this);
                     postStructList listData = new postStructList();
                     listData.add("phone" , phone );
 
                     func.post("time/getCalendar" , listData  );
-                }else {
-                    func.toast("需要登录");
-                    Intent intent = new Intent(MainActivity.this , loginActivity.class);
-                    startActivity(intent);
                 }
-
-
-
-
-                Date testDate = new Date();
-                testDate.setDate(21);
-
-                calendarDialog.show();
-
-
-
+//                else {
+//                    func.toast("需要登录");
+//                    Intent intent = new Intent(MainActivity.this , loginActivity.class);
+//                    startActivity(intent);
+//                }
 
                 
             }
@@ -101,37 +99,36 @@ public class MainActivity extends AppCompatActivity
 
 
         try {
-            clickToLogin = (ImageView) findViewById(R.id.imageView);
-//        clickToLogin.setOnClickListener(new View.OnClickListener(){
-//
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this , loginActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-            aMapLocationClient = new AMapLocationClient(this.getApplicationContext());
-            aMapLocationClientOption = setDefaultOption();
-            aMapLocationClient.setLocationOption(aMapLocationClientOption);
-
-            aMapLocationClient.setLocationListener(new AMapLocationListener() {
+            View drawerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+            circleImageView = (CircleImageView) drawerView.findViewById(R.id.circleImageView);
+            circleImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onLocationChanged(AMapLocation aMapLocation) {
-                    if(aMapLocation != null){
-                        if(aMapLocation.getErrorCode() == 0){
-
-
-                        }else{
-                            func.infoPush(aMapLocation.getErrorInfo() );
-                        }
-
-
-                    }
-                    aMapLocationClient.stopLocation();
+                public void onClick(View v) {
+                    func.infoPush("clickToLogin");
                 }
             });
 
-            aMapLocationClient.startLocation();
+
+
+
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                if((ContextCompat.checkSelfPermission(this ,
+                        (ACCESS_COARSE_LOCATION )))!= PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(this , new String[]{
+                            ACCESS_COARSE_LOCATION
+                    } , 1);
+
+                }else{
+                    initAmapLocation();
+                }
+            }else{
+                initAmapLocation();
+            }
+
+
+
+
         }catch (Throwable e){
 //            e.printStackTrace();
             func.infoPush((e) );
@@ -139,7 +136,20 @@ public class MainActivity extends AppCompatActivity
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
+        AMap aMap = mapView.getMap();
 
+//        Marker marker = aMap.addMarker(new MarkerOptions()
+//            .position(new LatLng(31.5315 , 104.70421))
+//            .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+//            .decodeResource(getResources() , R.drawable.sign_submit)))
+//            .draggable(false)
+//        );
+        aMap.setMyLocationEnabled(true);
+        aMap.getMyLocation();
+//        aMap.setMyLocationEnabled(false);
+        UiSettings uiSettings = aMap.getUiSettings();
+        uiSettings.setMyLocationButtonEnabled(true);
+        uiSettings.setZoomControlsEnabled(false);
 
 
 
@@ -149,6 +159,7 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+
 
     @Override
     public void onBackPressed() {
@@ -167,33 +178,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private static String getAdressMacByInterface() {
-        try {
-            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for (NetworkInterface nif : all) {
-                if (nif.getName().equalsIgnoreCase("wlan0")) {
-                    byte[] macBytes = nif.getHardwareAddress();
-                    if (macBytes == null) {
-                        return "";
-                    }
 
-                    StringBuilder res1 = new StringBuilder();
-                    for (byte b : macBytes) {
-                        res1.append(String.format("%02X:", b));
-                    }
 
-                    if (res1.length() > 0) {
-                        res1.deleteCharAt(res1.length() - 1);
-                    }
-                    return res1.toString();
-                }
-            }
 
-        } catch (Exception e) {
-            Log.e("MobileAcces", "Erreur lecture propriete Adresse MAC ");
-        }
-        return null;
-    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -217,20 +206,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
+
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
 
         } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(this, loginActivity.class);
-
-
-
-            startActivity(intent);
+//            Intent intent = new Intent(this, loginActivity.class);
+//
+//
+//
+//            startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
 
 
-            func.infoPush(func.sharedPreferences.getString("phone" , "null") );
+//            func.infoPush(func.sharedPreferences.getString("phone" , "null") );
 
 
         } else if (id == R.id.nav_manage) {
@@ -239,7 +230,7 @@ public class MainActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_send) {
-
+            func.infoPush("nav_send");
 
         }else if(id == R.id.drawer_layout){
 
@@ -253,28 +244,66 @@ public class MainActivity extends AppCompatActivity
 
 
 
+    @Override
+    public  void onRequestPermissionsResult(int requestCode ,
+                                            @NonNull String[] permissions , @NonNull int[] grantResults){
+
+
+        int len = permissions.length;
+        for(int i = 0 ; i < len ; i ++){
+            if(permissions[i].equals(Manifest.permission.ACCESS_COARSE_LOCATION)){
+                if(grantResults[i] == 0){
+                    initAmapLocation();
+                    return;
+                }
+            }
+        }
+
+            func.infoPush("权限已拒绝 , 相关功能会出现故障");
+
+    }
 
 
 
-    private AMapLocationClientOption setDefaultOption(){
+
+
+    private void initAmapLocation(){
+
+        aMapLocationClient = new AMapLocationClient(this.getApplicationContext());
+
         AMapLocationClientOption option = new AMapLocationClientOption();
+
+        option.setLocationPurpose(AMapLocationClientOption.AMapLocationPurpose.SignIn);
+
         option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        option.setGpsFirst(true);
-        option.setHttpTimeOut(33333);
-        int interval = 2*1000;
-        option.setInterval(interval);
-        option.setNeedAddress(true);
+
         option.setOnceLocation(true);
-        option.setOnceLocationLatest(true);
-        AMapLocationClientOption.setLocationProtocol(
-                AMapLocationClientOption.AMapLocationProtocol.HTTP);
-        option.setSensorEnable(true);
-        option.setWifiScan(true);
-        option.setLocationCacheEnable(true);
-        return option;
+
+        option.setHttpTimeOut(10*1000);
 
 
+        if(null != aMapLocationClient){
+            aMapLocationClient.setLocationOption(option);
+            aMapLocationClient.stopLocation();
+            aMapLocationClient.startLocation();
 
+        }
+        aMapLocationClient.setLocationListener(new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation aMapLocation) {
+                if(aMapLocation != null){
+                    if(aMapLocation.getErrorCode() == 0){
+
+
+                    }else{
+                        func.infoPush(aMapLocation);
+                    }
+
+
+                }
+                aMapLocationClient.stopLocation();
+            }
+        });
     }
 
 
@@ -288,7 +317,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initCalendarDialog(Context context){
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context , R.style.dialog);
 
         View view = View.inflate(context , R.layout.calender , null);
 
@@ -303,20 +332,32 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 func.loading();
 
-                AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
+                try {
+                    if(aMapLocationClient != null){
+                        aMapLocationClient.startLocation();
+                        AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
+                        aMapLocationClient.stopLocation();
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            Date current = new Date();
+                            String currentStr = simpleDateFormat.format(current);
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date current = new Date();
-                String currentStr = simpleDateFormat.format(current);
+                            postStructList listData = new postStructList();
+                            listData.add("lat" , aMapLocation.getLatitude());
+                            listData.add("lng" , aMapLocation.getLongitude());
+                            listData.add("time" , currentStr);
+                            listData.add("phone" , func.sharedPreferences.getString("phone" , "") );
 
-                postStructList listData = new postStructList();
-                listData.add("lat" , aMapLocation.getLatitude());
-                listData.add("lng" , aMapLocation.getLongitude());
-                listData.add("time" , currentStr);
-                listData.add("phone" , func.sharedPreferences.getString("phone" , "") );
+                            func.post("edit/index" , listData  );
+                    }else {
+                        func.infoPush("定位失败,请检查权限");
+                        func.endLoading();
+                    }
 
 
-                func.post("edit/index" , listData  );
+                }catch (Throwable e){
+                    func.infoPush(e);
+                }
+
 
             }
         });
@@ -330,7 +371,6 @@ public class MainActivity extends AppCompatActivity
 
 
     }
-
 
 
 }
