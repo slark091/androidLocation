@@ -28,11 +28,14 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.LatLng;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     private AMapLocationClient aMapLocationClient;
     private AMapLocationClientOption aMapLocationClientOption;
     private selfFunction func;
+    public AMap aMap;
 
 
 
@@ -136,7 +140,7 @@ public class MainActivity extends AppCompatActivity
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
-        AMap aMap = mapView.getMap();
+        aMap = mapView.getMap();
 
 //        Marker marker = aMap.addMarker(new MarkerOptions()
 //            .position(new LatLng(31.5315 , 104.70421))
@@ -151,8 +155,7 @@ public class MainActivity extends AppCompatActivity
         uiSettings.setMyLocationButtonEnabled(true);
         uiSettings.setZoomControlsEnabled(false);
 
-
-
+        func.post("map/getPolygons" , new postStructList()  );
 
 
 
@@ -160,6 +163,20 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public List<LatLng> createRectangle(LatLng center, double halfWidth,
+                                         double halfHeight) {
+        List<LatLng> latLngs = new ArrayList<LatLng>();
+        latLngs.add(new LatLng(center.latitude - halfHeight, center.longitude - halfWidth));
+        latLngs.add(new LatLng(center.latitude - halfHeight, center.longitude + halfWidth));
+        latLngs.add(new LatLng(center.latitude + halfHeight, center.longitude + halfWidth));
+        latLngs.add(new LatLng(center.latitude + halfHeight, center.longitude - halfWidth));
+        latLngs.add(new LatLng(center.latitude + 0.14, center.longitude - 0.2));
+        latLngs.add(new LatLng(center.latitude + 0.24, center.longitude - 0.1));
+        latLngs.add(new LatLng(center.latitude + 0.34, center.longitude - 0.3));
+        latLngs.add(new LatLng(center.latitude + 0.44, center.longitude - 0.14));
+        latLngs.add(new LatLng(center.latitude + 0.45, center.longitude - 0.4));
+        return latLngs;
+    }
 
     @Override
     public void onBackPressed() {
