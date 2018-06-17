@@ -2,13 +2,13 @@ package com.example.test.menu;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.transition.Transition;
@@ -47,9 +47,8 @@ import static android.content.Context.MODE_PRIVATE;
 class postStructList{
     private List<postStruct> dataList = new ArrayList<>() ;
     private postStruct postItem;
+    private boolean loginJudge = true;
     postStructList(){
-
-
 
     }
     public void add(String name , Object value ){
@@ -62,7 +61,12 @@ class postStructList{
     public List<postStruct> getDataList(){
         return  dataList;
     }
-
+    public void setLoginJudge(boolean value){
+        loginJudge = value;
+    }
+    public boolean getLoginJudge(){
+        return loginJudge;
+    }
 
 }
 
@@ -120,12 +124,41 @@ public class selfFunction {
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                    if(data.contains("loginJudge/")){
+                        String judge = data.substring(11);
+                        switch (judge){
+                            default:break;
 
-                    if(data.equals("")){
-                        infoPush("default");
+                            case  "findError":{
+                                toast("账号异常,请重新注册");
+                                break;
+                            }
+                            case  "codeError":{
+                                toast("密码已修改,请重新登录");
+                                break;
+                            }
+                            case  "macError":{
+                                toast("账号物理地址异常,请重新登录");
+                                break;
+                            }
+                            case  "statusError":{
+                                toast("账号已登出,请重新登录");
+                                break;
+                            }
+                            case  "timeOut":{
+                                toast("太久没有登录,请重新登录");
+                                break;
+                            }
+                        }
+                        Intent intent = new Intent(context , loginActivity.class);
+                        context.startActivity(intent);
+
                         return;
 
                     }
+
+
+
 
                     switch (what){
                         default:{
@@ -356,7 +389,7 @@ public class selfFunction {
 
     //init selfFunction
 
-    public static String md5(String string) {
+    public String md5(String string) {
         string += "test";
 
         MessageDigest md5 = null;
@@ -378,19 +411,6 @@ public class selfFunction {
         return "error";
     }
 
-    class  selfFunctionThread extends Thread{
-        private Looper looper;
-        public  void  run(){
-            Looper.prepare();
-            looper = Looper.myLooper();
-            Looper.loop();
-        }
-
-    }
-
-
-
-
 
     public void post(final String method  , postStructList list , final Context context ){
 
@@ -402,10 +422,7 @@ public class selfFunction {
             infoPush("没有网络连接");
             return ;
         }
-        if(isNetworkAvailable(context)){
-            infoPush("网络无法连接服务器");
-            return ;
-        }
+
         final  String info = handleInfo(list);
         final String path = context.getString(R.string.postTarget) + method;
         new Thread() {
@@ -492,6 +509,12 @@ public class selfFunction {
 
     public String handleInfo(postStructList list){
 
+
+        if(list.getLoginJudge()){
+            list.add("phone" , sharedPreferences.getString("phone" , "") );
+            list.add("code" , sharedPreferences.getString("code" , "") );
+            list.add("mac"  , getAdressMacByInterface() );
+        }
         List<postStruct> infoArray = list.getDataList();
 
         String info = "";
@@ -552,14 +575,7 @@ public class selfFunction {
 
     }
 
-    public boolean isSignUp(){
-
-
-
-        return false;
-    }
-
-    public static String getAdressMacByInterface() {
+    public String getAdressMacByInterface() {
         try {
             List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface nif : all) {
@@ -587,21 +603,5 @@ public class selfFunction {
         }
         return null;
     }
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-//如果仅仅是用来判断网络连接
-  //则可以使用 cm.getActiveNetworkInfo().isAvailable();
-            NetworkInfo[] info = cm.getAllNetworkInfo();
-            if (info != null) {
-                for (NetworkInfo anInfo : info) {
-                    if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
+
 }

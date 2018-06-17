@@ -2,7 +2,6 @@ package com.example.test.menu;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -70,17 +69,19 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
 
                 String phone = func.sharedPreferences.getString("phone" , "");
-                if(!phone.equals("")){
+//                if(!phone.equals(""))
+                {
                     initCalendarDialog(MainActivity.this);
                     postStructList listData = new postStructList();
                     listData.add("phone" , phone );
 
                     func.post("time/getCalendar" , listData  );
-                }else {
-                    func.toast("需要登录");
-                    Intent intent = new Intent(MainActivity.this , loginActivity.class);
-                    startActivity(intent);
                 }
+//                else {
+//                    func.toast("需要登录");
+//                    Intent intent = new Intent(MainActivity.this , loginActivity.class);
+//                    startActivity(intent);
+//                }
 
                 
             }
@@ -333,8 +334,10 @@ public class MainActivity extends AppCompatActivity
 
                 try {
                     if(aMapLocationClient != null){
+                        aMapLocationClient.startLocation();
                         AMapLocation aMapLocation = aMapLocationClient.getLastKnownLocation();
-                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        aMapLocationClient.stopLocation();
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             Date current = new Date();
                             String currentStr = simpleDateFormat.format(current);
 

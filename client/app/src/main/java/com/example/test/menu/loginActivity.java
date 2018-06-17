@@ -296,6 +296,8 @@ public class loginActivity extends Activity implements View.OnClickListener {
                 postStructList listData = new postStructList();
                 listData.add("phone" , userNmaeInput.getText());
                 listData.add("code" , codeInput.getText());
+                listData.add("mac" , func.getAdressMacByInterface());
+                listData.setLoginJudge(false);
 
 //                handleInfo(listData);
 
@@ -457,6 +459,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
                 func.loading();
                 postStructList listData = new postStructList();
                 listData.add("phone" , phone.getText().toString());
+                listData.setLoginJudge(false);
                 func.post("index/getMsg" , listData );
 
             }
@@ -469,6 +472,9 @@ public class loginActivity extends Activity implements View.OnClickListener {
                 postStructList listData = new postStructList();
                 listData.add("phone" , phone.getText().toString());
                 listData.add("code" , code.getText().toString());
+                listData.add("mac" , func.getAdressMacByInterface() );
+                listData.setLoginJudge(false);
+
                 func.post("index/signUp" , listData );
             }
         });
@@ -488,6 +494,7 @@ public class loginActivity extends Activity implements View.OnClickListener {
                     postStructList listData = new postStructList();
                     listData.add("phone" , phone.getText().toString());
                     listData.add("verifyCode" , temp);
+                    listData.setLoginJudge(false);
 
                     func.post("index/sign" , listData);
 
