@@ -2,6 +2,7 @@ package com.example.test.menu;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,16 +27,14 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
-import com.amap.api.maps.model.LatLng;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -92,7 +91,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -109,6 +108,8 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     func.infoPush("clickToLogin");
+                    Intent intent = new Intent(MainActivity.this , profileActivity.class);
+                    startActivity(intent);
                 }
             });
 
@@ -150,10 +151,13 @@ public class MainActivity extends AppCompatActivity
 //        );
         aMap.setMyLocationEnabled(true);
         aMap.getMyLocation();
-//        aMap.setMyLocationEnabled(false);
+
+//  aMap.setMyLocationEnabled(false);
         UiSettings uiSettings = aMap.getUiSettings();
         uiSettings.setMyLocationButtonEnabled(true);
         uiSettings.setZoomControlsEnabled(false);
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(16));
+
 
         func.post("map/getPolygons" , new postStructList()  );
 
@@ -161,21 +165,6 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    }
-
-    public List<LatLng> createRectangle(LatLng center, double halfWidth,
-                                         double halfHeight) {
-        List<LatLng> latLngs = new ArrayList<LatLng>();
-        latLngs.add(new LatLng(center.latitude - halfHeight, center.longitude - halfWidth));
-        latLngs.add(new LatLng(center.latitude - halfHeight, center.longitude + halfWidth));
-        latLngs.add(new LatLng(center.latitude + halfHeight, center.longitude + halfWidth));
-        latLngs.add(new LatLng(center.latitude + halfHeight, center.longitude - halfWidth));
-        latLngs.add(new LatLng(center.latitude + 0.14, center.longitude - 0.2));
-        latLngs.add(new LatLng(center.latitude + 0.24, center.longitude - 0.1));
-        latLngs.add(new LatLng(center.latitude + 0.34, center.longitude - 0.3));
-        latLngs.add(new LatLng(center.latitude + 0.44, center.longitude - 0.14));
-        latLngs.add(new LatLng(center.latitude + 0.45, center.longitude - 0.4));
-        return latLngs;
     }
 
     @Override
