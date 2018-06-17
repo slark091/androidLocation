@@ -22,12 +22,14 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.NetworkInterface;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -102,19 +104,6 @@ public class selfFunction {
 
     private void init(){
 
-
-
-
-
-
-
-        try {
-            ;
-        }catch (Throwable e ){
-
-            Log.d(tag , e.toString());
-        }
-
         editor = selfFunctionContext.getSharedPreferences("login" , MODE_PRIVATE).edit();
         sharedPreferences = selfFunctionContext.getSharedPreferences("login" , MODE_PRIVATE);
 
@@ -132,9 +121,16 @@ public class selfFunction {
                         @Override
                         public void run() {
 
+                    if(data.equals("")){
+                        infoPush("default");
+                        return;
+
+                    }
 
                     switch (what){
-                        default:break;
+                        default:{
+                            break;
+                        }
                         case "time/getCalendar":{
                             final MainActivity mainActivity = (MainActivity) context;
 
@@ -396,7 +392,7 @@ public class selfFunction {
 
 
 
-    public String post(final String method  , postStructList list , final Context context ){
+    public void post(final String method  , postStructList list , final Context context ){
 
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -404,7 +400,11 @@ public class selfFunction {
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if(networkInfo == null){
             infoPush("没有网络连接");
-            return  "noLine";
+            return ;
+        }
+        if(isNetworkAvailable(context)){
+            infoPush("网络无法连接服务器");
+            return ;
         }
         final  String info = handleInfo(list);
         final String path = context.getString(R.string.postTarget) + method;
@@ -465,12 +465,10 @@ public class selfFunction {
 
             }
         }.start();
-        return "test";
     }
 
-    public String post(final  String method , postStructList list){
-
-        return post(method , list  , selfFunctionContext);
+    public void post(final  String method , postStructList list){
+        post(method , list  , selfFunctionContext);
     }
 
     public void  loading(Context context){
@@ -493,7 +491,9 @@ public class selfFunction {
     }
 
     public String handleInfo(postStructList list){
+
         List<postStruct> infoArray = list.getDataList();
+
         String info = "";
 
         for(int i = 0 ; i < infoArray.size() ; i++){
@@ -559,5 +559,49 @@ public class selfFunction {
         return false;
     }
 
+    public static String getAdressMacByInterface() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (nif.getName().equalsIgnoreCase("wlan0")) {
+                    byte[] macBytes = nif.getHardwareAddress();
+                    if (macBytes == null) {
+                        return "";
+                    }
 
+                    StringBuilder res1 = new StringBuilder();
+                    for (byte b : macBytes) {
+                        res1.append(String.format("%02X:", b));
+                    }
+
+                    if (res1.length() > 0) {
+                        res1.deleteCharAt(res1.length() - 1);
+                    }
+                    return res1.toString();
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e("MobileAcces", "Erreur lecture propriete Adresse MAC ");
+
+        }
+        return null;
+    }
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+//如果仅仅是用来判断网络连接
+  //则可以使用 cm.getActiveNetworkInfo().isAvailable();
+            NetworkInfo[] info = cm.getAllNetworkInfo();
+            if (info != null) {
+                for (NetworkInfo anInfo : info) {
+                    if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }

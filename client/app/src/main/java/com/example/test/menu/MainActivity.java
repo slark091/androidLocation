@@ -17,7 +17,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,11 +32,8 @@ import com.amap.api.maps.UiSettings;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
-import java.net.NetworkInterface;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -181,33 +177,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private static String getAdressMacByInterface() {
-        try {
-            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for (NetworkInterface nif : all) {
-                if (nif.getName().equalsIgnoreCase("wlan0")) {
-                    byte[] macBytes = nif.getHardwareAddress();
-                    if (macBytes == null) {
-                        return "";
-                    }
-
-                    StringBuilder res1 = new StringBuilder();
-                    for (byte b : macBytes) {
-                        res1.append(String.format("%02X:", b));
-                    }
-
-                    if (res1.length() > 0) {
-                        res1.deleteCharAt(res1.length() - 1);
-                    }
-                    return res1.toString();
-                }
-            }
-
-        } catch (Exception e) {
-            Log.e("MobileAcces", "Erreur lecture propriete Adresse MAC ");
-        }
-        return null;
-    }
 
 
 
