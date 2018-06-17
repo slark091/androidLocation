@@ -1,4 +1,4 @@
 phpServer/runtime/*
 client/.idea
 phpServer/.idea
-client/app/*.apk
+client/app/app-release.apk
