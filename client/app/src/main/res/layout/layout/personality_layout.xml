@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="104dp"
+        android:layout_height="104dp"
+        app:srcCompat="@drawable/touxiang"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        android:layout_marginTop="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+    <Button
+        android:id="@+id/wodeshoucang"
+        android:text="我的收藏                                                 〉"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@drawable/shape"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintTop_toBottomOf="@id/icon"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/lishijilu"
+        android:text="历史记录                                                 〉"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@drawable/shape"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintTop_toBottomOf="@id/wodeshoucang"
+        android:layout_marginTop="5dp" />
+
+
+    <Button
+        android:id="@+id/lixianhuancun"
+        android:text="离线缓存                                                 〉"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@drawable/shape"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintTop_toBottomOf="@id/lishijilu"
+        android:layout_marginTop="5dp" />
+
+
+
+</android.support.constraint.ConstraintLayout>
