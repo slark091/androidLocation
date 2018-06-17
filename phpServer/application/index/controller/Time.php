@@ -22,8 +22,12 @@ class Time extends Controller
 
     public function getCalendar(){
 
+        $login = loginJudge($_POST);
         error_log(print_r(($_POST), 1 ) , 3 , "./log.txt");
 
+        if($login!=1){
+            return $login;
+        }
 
 
         $user = \think\Db::name("username")->where($_POST)->find();

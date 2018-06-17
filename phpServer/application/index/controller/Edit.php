@@ -15,6 +15,14 @@ class Edit extends Controller
 {
 
     public function index(){
+
+        $login = loginJudge($_POST);
+//        error_log(print_r(($login), 1 ) , 3 , "./log.txt");
+
+        if($login!=1){
+            return $login;
+        }
+
          $position =  $_POST;
 
         $fence = \think\Db::name("fence")->field("fence_array")->select();
@@ -50,9 +58,9 @@ class Edit extends Controller
             $insert["time"] = $_POST["time"];
             $insert["uid"] = $user["id"];
             $day=((int)substr($_POST["time"],8,2));
-            error_log(print_r(("\n=============================================\n"), 1 ) , 3 , "./log.txt");
-            error_log(print_r(($day), 1 ) , 3 , "./log.txt");
-            error_log(print_r(("\n=============================================\n"), 1 ) , 3 , "./log.txt");
+//            error_log(print_r(("\n=============================================\n"), 1 ) , 3 , "./log.txt");
+//            error_log(print_r(($day), 1 ) , 3 , "./log.txt");
+//            error_log(print_r(("\n=============================================\n"), 1 ) , 3 , "./log.txt");
 
 
             $res = \think\Db::name("calendar")->insert($insert);

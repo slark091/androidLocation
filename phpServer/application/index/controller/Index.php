@@ -18,14 +18,20 @@ class Index extends Controller
 
     }
     public  function  login(){
-        $data = $_POST;
-
+        $data["phone"] = $_POST["phone"];
+        $data["code"] = $_POST["code"];
 
         $login = \think\Db::name("username")->where($data)->find();
-        error_log(print_r(($login), 1 ) , 3 , "./log.txt");
 
         if($login == array()){
             return "failed";
+        }else{
+
+            $login["mac"] = $_POST["mac"];
+            $login["last_login_time"] = date("Y-m-d H:i:s",time());
+            $login["status"] = "online";
+            $res = \think\Db::name("username")->update($login);
+
         }
 
         return json_encode($login);
@@ -33,7 +39,10 @@ class Index extends Controller
     public function getMsg(){
         $phone = $_POST["phone"];
         $where["phone"] = $phone;
-        if(\think\Db::name("username")->where($where)->count()){
+        $count = \think\Db::name("username")->where($where)->count();
+//        error_log(print_r(($count), 1 ) , 3 , "./log.txt");
+
+        if($count){
             return "phoneExits";
         }
 
@@ -43,17 +52,16 @@ class Index extends Controller
         $res = $send->send();
 
         $res =  json_decode( json_encode( $res),true);
-        error_log(print_r(($res), 1 ) , 3 , "./log.txt");
-        if($res["sub_code"] !== null )
+//        error_log(print_r(($res), 1 ) , 3 , "./log.txt");
+        if(!array_key_exists("sub_code", $res) )
         {
             $insert["verifyCode"] = $code;
             $insert["phone"] = $phone;
             \think\Db::name("verify")->insert($insert);
-            return $res["sub_code"];
+            return "OK";
         }
+        return $res["sub_code"];
 
-
-        return "OK";
     }
 
 
@@ -68,13 +76,8 @@ class Index extends Controller
         if($temp == Array()){
             return "verifyCode does not exits";
         }
-        $getTime = $temp['time_stamp'];
-        $getTime = strtotime($getTime);
 
-        $currentTime = date("Y-m-d H:i:s",time());
-        $currentTime = strtotime($currentTime);
-
-        if($currentTime - $getTime > 600 ){
+        if(timeJudge($temp["time_stamp"] , 600)){
             return "timeOut";
         }else{
             return "success";
@@ -86,14 +89,17 @@ class Index extends Controller
     }
 
     public function signUp(){
-        $phone = $_POST["phone"];
-        $code = $_POST["code"];
-        $insert["code"] = $code;
-        $insert["phone"] = $phone;
+        $insert["code"] = $_POST["code"];
+        $insert["phone"] = $_POST["phone"];
+        $insert["mac"] = $_POST["mac"];
+        $insert["status"] = "online";
         $res = \think\Db::name("username")->insert($insert);
-        error_log(print_r(($res), 1 ) , 3 , "./log.txt");
+//        error_log(print_r(($res), 1 ) , 3 , "./log.txt");
 
         if($res != 0){
+
+
+
             return json_encode($insert);
         }
         return "dataBaseError";
