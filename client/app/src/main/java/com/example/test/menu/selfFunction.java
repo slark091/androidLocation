@@ -16,6 +16,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.PolygonOptions;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -164,6 +167,48 @@ public class selfFunction {
                         default:{
                             break;
                         }
+                        case "map/getPolygons":{
+                            MainActivity mainActivity = (MainActivity) context;
+
+                            JSONArray jsonArray = null;
+                            try {
+                                jsonArray = new JSONArray(data);
+
+                            } catch (JSONException e) {
+
+                                e.printStackTrace();
+                            }
+//                            jsonArray.get(0);
+
+                            int len = jsonArray.length();
+                            for(int i = 0 ; i < len ; i ++ ){
+                                JSONObject jsonObject = null;
+                                double lat  , lng;
+                                try {
+                                    jsonObject = new JSONObject( jsonArray.getString(i));
+                                    JSONArray jsonArray1 ;
+                                    jsonArray1 = new JSONArray(jsonObject.getString("fence_array"));
+                                    List<LatLng> latLngs = new ArrayList<>();
+
+                                    int len1 = jsonArray1.length();
+                                    for(int j = 0 ; j < len1 ; j++ ){
+                                       JSONObject jsonObject1 ;
+                                       jsonObject1 = new JSONObject(jsonArray1.getString(j));
+                                       lat = jsonObject1.getDouble("lat");
+                                       lng = jsonObject1.getDouble("lng");
+                                        latLngs.add(new LatLng(lat , lng));
+                                    }
+                                    mainActivity.aMap.addPolygon(new PolygonOptions()
+                                            .addAll(latLngs).fillColor(0x75638233)
+                                            .strokeColor(0x75638233).strokeWidth(1));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            break;
+                        }
+
                         case "time/getCalendar":{
                             final MainActivity mainActivity = (MainActivity) context;
 

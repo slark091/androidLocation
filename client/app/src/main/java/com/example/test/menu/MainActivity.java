@@ -2,6 +2,7 @@ package com.example.test.menu;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity
     private AMapLocationClient aMapLocationClient;
     private AMapLocationClientOption aMapLocationClientOption;
     private selfFunction func;
+    public AMap aMap;
 
 
 
@@ -88,7 +91,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -105,6 +108,8 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     func.infoPush("clickToLogin");
+                    Intent intent = new Intent(MainActivity.this , profileActivity.class);
+                    startActivity(intent);
                 }
             });
 
@@ -136,7 +141,7 @@ public class MainActivity extends AppCompatActivity
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
-        AMap aMap = mapView.getMap();
+        aMap = mapView.getMap();
 
 //        Marker marker = aMap.addMarker(new MarkerOptions()
 //            .position(new LatLng(31.5315 , 104.70421))
@@ -146,20 +151,21 @@ public class MainActivity extends AppCompatActivity
 //        );
         aMap.setMyLocationEnabled(true);
         aMap.getMyLocation();
-//        aMap.setMyLocationEnabled(false);
+
+//  aMap.setMyLocationEnabled(false);
         UiSettings uiSettings = aMap.getUiSettings();
         uiSettings.setMyLocationButtonEnabled(true);
         uiSettings.setZoomControlsEnabled(false);
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(16));
 
 
-
+        func.post("map/getPolygons" , new postStructList()  );
 
 
 
 
 
     }
-
 
     @Override
     public void onBackPressed() {
