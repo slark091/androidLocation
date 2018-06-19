@@ -34,7 +34,6 @@ class Time extends Controller
         $where["uid"] = $user["id"];
         $calendar = \think\Db::name("calendar")->where($where)->select();
 
-        error_log(print_r(($calendar), 1 ) , 3 , "./log.txt");
 
 
 
